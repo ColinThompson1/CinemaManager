@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version 5.7.17-log)
-# Date: 2017-03-25 13:02:45
+# Date: 2017-03-27 11:34:04
 # Generator: MySQL-Front 6.0  (Build 1.82)
 
 
@@ -72,13 +72,12 @@ CREATE TABLE `customers` (
 
 DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
-  `DNO` int(11) NOT NULL,
+  `DNO` int(9) NOT NULL DEFAULT '1',
   `MNGR_SSN` int(9) DEFAULT NULL,
   `DNAME` varchar(10) NOT NULL,
   PRIMARY KEY (`DNO`),
   UNIQUE KEY `DNAME` (`DNAME`),
-  KEY `MNGR_SSN` (`MNGR_SSN`),
-  CONSTRAINT `department_ibfk_1` FOREIGN KEY (`MNGR_SSN`) REFERENCES `employee` (`SSN`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `MNGR_SSN` (`MNGR_SSN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
@@ -92,12 +91,11 @@ CREATE TABLE `department` (
 
 DROP TABLE IF EXISTS `employee`;
 CREATE TABLE `employee` (
-  `SSN` int(11) NOT NULL,
+  `SSN` int(9) NOT NULL DEFAULT '0',
   `FNAME` varchar(30) NOT NULL,
-  `MID_NAME` varchar(30) DEFAULT NULL,
   `LNAME` varchar(30) NOT NULL,
   `BDATE` date DEFAULT NULL,
-  `DNO` int(11) DEFAULT '1',
+  `DNO` int(9) DEFAULT NULL,
   `SUPERSSN` int(9) DEFAULT NULL,
   `SEX` varchar(6) DEFAULT NULL,
   `ADDRESS` varchar(50) DEFAULT NULL,
@@ -105,8 +103,8 @@ CREATE TABLE `employee` (
   `SALARY` int(10) DEFAULT NULL,
   `EMAIL` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`SSN`),
-  KEY `DNO` (`DNO`),
-  CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`DNO`) REFERENCES `department` (`DNO`)
+  KEY `employee_ibfk_1` (`DNO`),
+  CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`DNO`) REFERENCES `department` (`DNO`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
