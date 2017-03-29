@@ -7,7 +7,7 @@ var app = express();
 const PORT = 8081; //For simplicity, since you need root to make it on port 80
 const HOSTNAME = "127.0.0.1";
 
-app.use(express.static('../../public')); //Serves static files to client
+app.use(express.static(__dirname +'/public')); //Serves static files to client
 
 app.get('/', function (req, res) { //Callback for main page
     res.sendFile( __dirname + "/public/views/index.html");
