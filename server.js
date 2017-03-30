@@ -1,32 +1,46 @@
 /**
  * Created by colinthompson on 2017-03-22.
  */
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
 
-// Create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+// Set Up =============================================
+var express = require('express');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var flash = require('connect-flash');
+var morgan = require('morgan');
+var app = express();
 
 const PORT = 8081; //For simplicity, since you need root to make it on port 80
 const HOSTNAME = "127.0.0.1";
 
+// Config =============================================
+
+app.use(morgan('dev')); //Logs to the console
+app.use(cookieParser()); //Cookies for Auth
+app.use(bodyParser.urlencoded({
+    extended: true
+})); //Get info from html forms
+app.use(bodyParser.json());
+
+app.use(session({
+    secret: 'hashmeupsomethinggood',
+    resave: true,
+    saveUninitialized: true
+})); //Set default values
+app.use(passport.initialize());
+app.use(passport.session()); //Login sessions
+app.use(flash()); //For 'Flashing' messages back to client
+
 app.use(express.static(__dirname +'/public')); //Serves static files to client
 
-app.get('/', function (req, res) { //Callback for main page
-    res.sendFile( __dirname + "/public/views/index.html");
-});
+// Routing =============================================
 
-//Handler for User Login
-app.post('/userlogin', urlencodedParser, function (req, res) {
-    var employeeLogin = { //Credentials
-        email: req.body.email,
-        password: req.body.password
-    };
+//Initialize routing with application and configured passport
+require('./app/routes.js')(app, passport);
 
-    console.log(employeeLogin);
-    res.sendFile( __dirname + "/public/views/index.html");
-});
+// Run ==================================================
 
 //Run the server
 var server = app.listen(PORT, HOSTNAME, function () {
