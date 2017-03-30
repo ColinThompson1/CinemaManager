@@ -17,8 +17,9 @@ app.get('/', function (req, res) { //Callback for main page
     res.sendFile( __dirname + "/public/views/index.html");
 });
 
+//Handler for User Login
 app.post('/userlogin', urlencodedParser, function (req, res) {
-    var employeeLogin = {
+    var employeeLogin = { //Credentials
         email: req.body.email,
         password: req.body.password
     };
@@ -27,6 +28,7 @@ app.post('/userlogin', urlencodedParser, function (req, res) {
     res.sendFile( __dirname + "/public/views/index.html");
 });
 
+//Run the server
 var server = app.listen(PORT, HOSTNAME, function () {
     var host = server.address().address;
     var port = server.address().port;
