@@ -13,6 +13,11 @@ module.exports = function (app, passport) {
         res.render("index.html");
     });
 
+    app.get('/movies', function (req, res) { //Callback for main page
+        // res.render("index.html", {root: path.join(__dirname, "../public/views/")});
+        res.render("movies.html");
+    });
+
     //Handler for User Login
     app.post('/userlogin', function (req, res) {
         var employeeLogin = { //Credentials
