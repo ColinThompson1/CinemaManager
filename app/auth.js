@@ -3,6 +3,11 @@
  */
 
 var LocalStrategy = require('passport-local').Strategy; //For authenticating email and password
+var mysql = require('mysql');
+var connection = require('./connection');
+
+//Set up
+var sqlCon = mysql.createConnection(connection)
 
 module.exports = function (passport) {
 
@@ -10,6 +15,11 @@ module.exports = function (passport) {
     // Needed for persistent logins
 
     passport.serializeUser(function (user, done) {
+        done(null, user.id);
+    });
+
+    passport.deserializeUser(function (id, done) {
+
 
     })
 
