@@ -60,3 +60,31 @@ var server = app.listen(PORT, HOSTNAME, function () {
     console.log("Example app listening at http://%s:%s", host, port)
 });
 
+//SQL Testing
+
+var con = require('./app/connection');
+var mysql = require('mysql');
+
+var connection = mysql.createConnection(con);
+
+
+connection.connect(function(err) {
+    if (err){
+        console.error('error connecting: ' + err.stack);
+        return;
+    }
+
+    console.log('connected as id ' + connection.threadId);
+});
+
+connection.query({
+    sql: 'SELECT FNAME FROM EMPLOYEE'
+},
+    function (error, results, fields) {
+        // error will be an Error if one occurred during the query
+        // results will contain the results of the query
+        // fields will contain information about the returned results fields (if any)
+
+        console.log(results);
+    }
+);
