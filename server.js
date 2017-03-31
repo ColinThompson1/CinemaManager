@@ -1,44 +1,57 @@
 /**
  * Created by colinthompson on 2017-03-22.
  */
+
+'use strict';
+
+// Set Up =============================================
 var express = require('express');
-var app = express();
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mysql = require("mysql");
+var passport = require('passport');
+var flash = require('connect-flash');
+var morgan = require('morgan');
+var ejs = require('ejs');
+var app = express();
 
-var connection = mysql.createConnection({
-    server: "localhost",
-    database: "cinema",
-    user: "root",
-    password: "marklin",
-    port: 3306
-});
-
-// Create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false });
+//DON'T FORGET TO EDIT THE CONNECTION INFORMATION
 
 const PORT = 8081; //For simplicity, since you need root to make it on port 80
 const HOSTNAME = "127.0.0.1";
 
+// Config =============================================
+
+app.set('view engine', 'html'); //Use the template module to render html
+app.engine('html', ejs.renderFile);
+app.set('views', __dirname  + "/public/views/pages"); //Instruct the engine of the location of the views
+
+
+
+app.use(morgan('dev')); //Logs to the console
+app.use(cookieParser()); //Cookies for Auth
+app.use(bodyParser.urlencoded({
+    extended: true
+})); //Get info from html forms
+app.use(bodyParser.json());
+
+app.use(session({
+    secret: 'hashmeupsomethinggood',
+    resave: true,
+    saveUninitialized: true
+})); //Set default values
+app.use(passport.initialize());
+app.use(passport.session()); //Login sessions
+app.use(flash()); //For 'Flashing' messages back to client
+
 app.use(express.static(__dirname +'/public')); //Serves static files to client
 
-app.get('/', function (req, res) { //Callback for main page
-    res.sendFile( __dirname + "/public/views/index.html");
-});
+// Routing =============================================
 
-//Handler for User Login
-app.post('/userlogin', urlencodedParser, function (req, res) {
-    var employeeLogin = { //Credentials
-        email: req.body.email,
-        password: req.body.password
-    };
+//Initialize routing with application and configured passport
+require('./app/routes.js')(app, passport);
 
-    console.log(employeeLogin);
-    res.sendFile( __dirname + "/public/views/index.html");
-
-    //AUTHENTICATE wITH DB
-
-});
+// Run ==================================================
 
 //Run the server
 var server = app.listen(PORT, HOSTNAME, function () {
@@ -46,6 +59,14 @@ var server = app.listen(PORT, HOSTNAME, function () {
     var port = server.address().port;
     console.log("Example app listening at http://%s:%s", host, port)
 });
+
+//SQL Testing
+
+var con = require('./app/connection');
+var mysql = require('mysql');
+
+var connection = mysql.createConnection(con);
+
 
 connection.connect(function(err) {
     if (err){
