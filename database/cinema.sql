@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version 5.7.17-log)
-# Date: 2017-03-31 15:27:35
+# Date: 2017-04-01 18:03:33
 # Generator: MySQL-Front 6.0  (Build 1.82)
 
 
@@ -55,9 +55,9 @@ CREATE TABLE `customers` (
   `SEX` varchar(6) DEFAULT 'female',
   `ADDRESS` varchar(50) DEFAULT NULL,
   `CREDIT_CARD_NO` bigint(16) DEFAULT NULL,
-  `EMAIL` varchar(20) DEFAULT NULL,
+  `EMAIL` varchar(100) DEFAULT NULL,
   `PHONE_NO` bigint(11) DEFAULT NULL,
-  `PASSWORD` varchar(255) NOT NULL DEFAULT 'password',
+  `PASSWORD` varchar(255) NOT NULL DEFAULT 'pssword',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `ID` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -104,8 +104,8 @@ CREATE TABLE `employee` (
   `ADDRESS` varchar(50) DEFAULT NULL,
   `PHONE_NO` int(11) DEFAULT NULL,
   `SALARY` int(10) DEFAULT NULL,
-  `EMAIL` varchar(30) DEFAULT NULL,
-  `PASSWORD` varchar(255) NOT NULL DEFAULT 'password',
+  `EMAIL` varchar(100) DEFAULT NULL,
+  `PASSWORD` varchar(255) NOT NULL DEFAULT 'pssword',
   PRIMARY KEY (`SSN`),
   KEY `employee_ibfk_1` (`DNO`),
   CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`DNO`) REFERENCES `department` (`DNO`) ON DELETE SET NULL ON UPDATE CASCADE
