@@ -11,22 +11,31 @@
 $('#login-submit').click(function () {
     event.preventDefault(); //Don't trigger regular submit functionality
 
-    var email = $('#regEmail').val(); //Form values
+    var userEmail = $('#regEmail').val(); //Form values
     var pwd = $('#password').val();
 
     if (email == "" ||pwd == "") {
         alert("Your email or password is empty");
     } else {
-        $.post(
-            "/userlogin",
-            {'email': email, 'password': pwd},
-            function (msg) {
-                alert("success " + msg); //Todo: Replace w/ real functionality
-                $('#login-reg').modal('hide');
-        })
-            .fail(function () {
-                alert("error");
-            })
+        $.ajax({
+            type:'POST',
+            url:'userlogin',
+            data: {
+                email: userEmail,
+                password: pwd
+            },
+            dataType: "json",
+            success: function (data, textStatus) {
+
+                if (data.flashInfo) //Check for alert to display
+                    alert("Error: " + data.flashInfo);
+                else
+                    alert("Unknown login error occurred"); //if there is no alert the page should have redirected you
+
+            }
+
+        });
+
     }
     return false;
 });
