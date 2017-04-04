@@ -26,6 +26,7 @@ module.exports = function (passport) {
 
     //Serialize user id to identify session
     passport.serializeUser(function (user, done) {
+        console.log("[Auth] Checking Login of " + user.EMAIL);
         if (user.ID) //User logging in is a customer OR employee - check both
             done(null, user.ID);
         else
@@ -35,7 +36,7 @@ module.exports = function (passport) {
     //Obtain user object based on session user id
     passport.deserializeUser(function (id, done) {
 
-        connection.query(
+        connection.query( //todo: add support for the employee here too
             "SELECT * FROM customers WHERE EMAIL = ?",
             [id],
             function (err, results, field) {
@@ -47,19 +48,21 @@ module.exports = function (passport) {
 // Login ==============================================================
 
     passport.use(
-        'login',
+        'local-login',
         new LocalStrategy({
             usernameField: 'email',
             passwordField: 'password',
-            passReqToCallback: true
+            passReqToCallback : true
         },
         function (req, email, password, done) {
-
+            console.log("[Auth] Checking Login of " + email);
             //Query for customer credentials
             connection.query("SELECT * FROM customers WHERE EMAIL = ?",
                 [email],
-                function (err, results, field) {
+                function (err, results) {
+                    console.log("[Auth] First query");
                     if (err) {
+                        console.log("[Auth] Error Accessing Database");
                         return done(err); //Error accessing database
                     } else {
                         if (results.length == 0) { //Could possibly be an employee logging in
@@ -67,13 +70,14 @@ module.exports = function (passport) {
                             //Query for employee credentials
                             connection.query("SELECT * FROM employee WHERE EMAIL = ?",
                                 [email],
-                                function (err, results, field) {
+                                function (err, results) {
                                     if (err) {
                                         return done(err); //Query failed
                                     } else {
-                                        if (results.length == 0) //Does it exist in employee either?
+                                        if (results.length == 0) {//Does it exist in employee either?
+                                            console.log("[Auth] Could not find user");
                                             return done(null, false, req.flash("login", "A user by that name does not exist!"));
-
+                                        }
                                         return passwordCheck(results[0]); //Verify password
 
                                     }
@@ -82,13 +86,13 @@ module.exports = function (passport) {
 
                             )
                         }
-
                         return passwordCheck(results[0]);
                     }
                 });
 
             //Determines the validity of a password and returns the corresponding verify callback function
             var passwordCheck = function (result) {
+                console.log("[Auth] Verifying Password of " + email);
                 if (result.PASSWORD == password)
                     return done(null, result);
                 else
@@ -102,11 +106,11 @@ module.exports = function (passport) {
 // Register ==============================================================
 
     passport.use(
-        'register',
+        'local-register',
         new LocalStrategy({
                 usernameField: 'email',
                 passwordField: 'password',
-                passReqToCallback: true
+                passReqToCallback : true
             },
             function (req, email, password, done) {
                 //Grab form data
@@ -122,7 +126,7 @@ module.exports = function (passport) {
                 connection.query(
                     "SELECT * FROM customer WHERE EMAIL = ?",
                     [email],
-                    function (err, results, field) {
+                    function (err, results) {
                         if (err) {
                             done(err);
                         }

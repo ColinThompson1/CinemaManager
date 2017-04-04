@@ -16,8 +16,6 @@ var app = express();
 var passport = require('passport');
 var flash = require('connect-flash');
 
-//DON'T FORGET TO EDIT THE CONNECTION INFORMATION
-
 const PORT = 8081; //For simplicity, since you need root to make it on port 80
 const HOSTNAME = "127.0.0.1";
 

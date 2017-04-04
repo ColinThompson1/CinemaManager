@@ -2,10 +2,6 @@
  * Created by colinthompson on 2017-03-30.
  */
 
-//Set Up
-var path = require('path');
-
-
 module.exports = function (app, passport) {
 
     app.get('/', function (req, res) { //Callback for main pages
@@ -17,7 +13,8 @@ module.exports = function (app, passport) {
     });
 
     //Handler for User Login
-    app.post('/userlogin', passport.authenticate('login', {
+    app.post('/userlogin',
+        passport.authenticate('local-login', {
             failureFlash:true
         },
         function (req, res) {
@@ -27,10 +24,11 @@ module.exports = function (app, passport) {
                 res.redirect("index.html"); //redirect but this time will render as logged in
             } else {
                 console.log("Login Attempt");
-                console.log(req.flash('login'));
-                res.json({flashInfo: req.flash('login')}); //respond with errors
+                res.json({flashInfo: req.flash('login')}); //respond with info
             }
 
-        }));
+        }
+        )
+    );
 
 };
