@@ -12,11 +12,12 @@ module.exports = function (app, passport) {
     });
 
     app.get('/movies', function (req, res) { //Callback for movies display
+
+
         res.render("movies.html", {
             user : req.user
         });
     });
-
 
     app.post('/userlogin', function (req, res, next) {
         passport.authenticate('local-login', function (err, user, info) {
