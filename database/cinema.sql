@@ -7,6 +7,7 @@
 # Structure for table "advertisers"
 #
 
+
 DROP TABLE IF EXISTS `advertisers`;
 CREATE TABLE `advertisers` (
   `ID` int(11) NOT NULL,
@@ -128,15 +129,24 @@ CREATE TABLE `movie` (
   `RELEASE_DATE` date DEFAULT NULL,
   `LENGTH` time NOT NULL,
   `EARNINGS` double DEFAULT NULL,
-  `AIR_LENGTH` time DEFAULT NULL,
-  `POSTER_PATH` varchar(50) DEFAULT NULL,
+  `AIR_LENGTH` int DEFAULT NULL,
+  `POSTER_PATH` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "movie"
 #
-
+INSERT INTO `movie` VALUES (0, 'Beauty and the Beast', '2017-02-23', '02:19', 61843, 60, '/CinemaManger/public/movie_images/Beauty_and_the_Beast.jpg');
+INSERT INTO `movie` VALUES (1, 'Doctor Strange', '2016-10-13', '01:55', 197205, 86, '/CinemaManger/public/movie_images/Doctor_Strange.jpg');
+INSERT INTO `movie` VALUES (2, 'Finding Dory', '2016-06-17', '01:40', 523498, 217, '/CinemaManger/public/movie_images/Finding_Dory.jpg');
+INSERT INTO `movie` VALUES (3, 'Ghost in the Shell', '2017-03-31', '02:00', 6, 5000, '/CinemaManger/public/movie_images/Ghost_in_the_Shell.jpg');
+INSERT INTO `movie` VALUES (4, 'Hell or High Water', '2016-08-19', '01:43', 18612, 190, '/CinemaManger/public/movie_images/Hell_or_High_Water.jpg');
+INSERT INTO `movie` VALUES (5, 'Manchester by the Sea', '2016-11-18', '02:17', 54612, 126, '/CinemaManger/public/movie_images/Manchester_By_The_Sea.jpg');
+INSERT INTO `movie` VALUES (6, 'Moana', '2016-11-23', '01:53', 1000000, 136, '/CinemaManger/public/movie_images/Moana.jpg');
+INSERT INTO `movie` VALUES (7, 'Rogue One: A Star Wars Story', '2016-12-16', '02:13', 2000000, 100, '/CinemaManger/public/movie_images/Rogue_One_A_Star_Wars_Story.jpg');
+INSERT INTO `movie` VALUES (8, 'Spider-Man: Homecoming', '2017-06-17', '00:00', 0, 0, '/CinemaManger/public/movie_images/Spiderman_Homecoming.jpg');
+INSERT INTO `movie` VALUES (9, 'The Jungle Book', '2016-04-15', '01:51', 500000, 269, '/CinemaManger/public/movie_images/The_Jungle_Book.jpg');
 
 #
 # Structure for table "showing"
