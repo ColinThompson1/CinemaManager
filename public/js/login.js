@@ -25,12 +25,19 @@ $('#login-submit').click(function () {
                 password: pwd
             },
             dataType: "json",
+            xhrFields: {
+                withCredentials: true
+            },
             success: function (data, textStatus) {
 
-                if (data.flashInfo) //Check for alert to display
-                    alert("Error: " + data.flashInfo);
-                else
-                    alert("Unknown login error occurred"); //if there is no alert the page should have redirected you
+                if (data.refresh) {
+                    location.reload();
+                } else {
+                    var $errLog = $('#loginError');
+                    $errLog.html(data.flashInfo);
+                    $errLog.show();
+
+                }
 
             }
 

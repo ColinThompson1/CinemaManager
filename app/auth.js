@@ -26,7 +26,7 @@ module.exports = function (passport) {
 
     //Serialize user id to identify session
     passport.serializeUser(function (user, done) {
-        console.log("[Auth] Checking Login of " + user.EMAIL);
+        console.log("[Auth] Checking login session of " + user.EMAIL);
         if (user.ID) //User logging in is a customer OR employee - check both
             done(null, user.ID);
         else
@@ -35,11 +35,16 @@ module.exports = function (passport) {
 
     //Obtain user object based on session user id
     passport.deserializeUser(function (id, done) {
-
-        connection.query( //todo: add support for the employee here too
-            "SELECT * FROM customers WHERE EMAIL = ?",
+        console.log("[Auth] Deserializing user " + id);
+        var query;
+        if (id.toString().length < 9) { //Not the best way of doing things
+            query = "SELECT * FROM customers WHERE ID = ?"
+        } else {
+            query = "SELECT * FROM customers WHERE SSN = ?"
+        }
+        sqlCon.query(query,
             [id],
-            function (err, results, field) {
+            function (err, results) {
                 done(err, results[0]);
             }
         );
@@ -57,18 +62,17 @@ module.exports = function (passport) {
         function (req, email, password, done) {
             console.log("[Auth] Checking Login of " + email);
             //Query for customer credentials
-            connection.query("SELECT * FROM customers WHERE EMAIL = ?",
+            sqlCon.query("SELECT * FROM customers WHERE EMAIL = ?",
                 [email],
                 function (err, results) {
-                    console.log("[Auth] First query");
                     if (err) {
                         console.log("[Auth] Error Accessing Database");
                         return done(err); //Error accessing database
                     } else {
                         if (results.length == 0) { //Could possibly be an employee logging in
-
+                            console.log("[Auth] Checking employee table");
                             //Query for employee credentials
-                            connection.query("SELECT * FROM employee WHERE EMAIL = ?",
+                            sqlCon.query("SELECT * FROM employee WHERE EMAIL = ?",
                                 [email],
                                 function (err, results) {
                                     if (err) {
@@ -78,6 +82,7 @@ module.exports = function (passport) {
                                             console.log("[Auth] Could not find user");
                                             return done(null, false, req.flash("login", "A user by that name does not exist!"));
                                         }
+                                        console.log("test");
                                         return passwordCheck(results[0]); //Verify password
 
                                     }
@@ -85,19 +90,22 @@ module.exports = function (passport) {
                                 }
 
                             )
+                        } else {
+                            return passwordCheck(results[0]);
                         }
-                        return passwordCheck(results[0]);
                     }
                 });
 
             //Determines the validity of a password and returns the corresponding verify callback function
             var passwordCheck = function (result) {
                 console.log("[Auth] Verifying Password of " + email);
-                if (result.PASSWORD == password)
+                if (result.PASSWORD == password) {
+                    console.log("[Auth] Password of " + email + " verified");
                     return done(null, result);
-                else
+                } else {
+                    console.log("[Auth] Password of " + email + " incorrect");
                     return done(null, false, req.flash("login", "Incorrect Password"));
-
+                }
             };
         }
         )
@@ -123,7 +131,7 @@ module.exports = function (passport) {
                 }
 
                 //Check that we arent making a duplicate account
-                connection.query(
+                sqlCon.query(
                     "SELECT * FROM customer WHERE EMAIL = ?",
                     [email],
                     function (err, results) {
@@ -146,7 +154,7 @@ module.exports = function (passport) {
                                 SEX: data[3]
                             };
 
-                            connection.query(
+                            sqlCon.query(
                                 "INSERT INTO customer(FNAME, LNAME, BDATE, SEX, EMAIL, `PASSWORD`) " +
                                 "VALUES (?, ?, STR_TO_DATE(?, '%m/%d/%y'), ?, ?, ?)",
                                 data,
@@ -159,7 +167,6 @@ module.exports = function (passport) {
                         }
 
                     })
-
 
             }
         )

@@ -38,7 +38,10 @@ app.set('views', __dirname  + "/public/views/pages"); //Instruct the engine of t
 app.use(session({
     secret: 'hashmeupsomethinggood',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie:{
+        expires: false
+    }
 })); //Set default values
 app.use(passport.initialize());
 app.use(passport.session()); //Login sessions
