@@ -47,6 +47,50 @@ $('#login-submit').click(function () {
     return false;
 });
 
+$('#register-submit').click(function () {
+    event.preventDefault(); //Don't trigger regular submit functionality
+
+    var fName = $('#fname').val();
+    var lName = $('#fname').val();
+    var bday = $('#bday').val();
+    var gender = $('#gender').val();
+    var email = $('#reg-email').val();
+    var pwd = $('#reg-password').val();
+    var cfm = $('#confirm-password').val();
+
+    if (fName == "" ||lName == "" ||bday == "" ||gender == "" ||email == "" ||pwd == "" ||cfm == "") {
+        alert("Your email or password is empty");
+    } else {
+        $.ajax({
+            type:'POST',
+            url:'userlogin',
+            data: {
+                email: userEmail,
+                password: pwd
+            },
+            dataType: "json",
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data, textStatus) {
+
+                if (data.refresh) {
+                    location.reload();
+                } else {
+                    var $errLog = $('#loginError');
+                    $errLog.html(data.flashInfo);
+                    $errLog.show();
+
+                }
+
+            }
+
+        });
+
+    }
+    return false;
+});
+
 
 // Swapping between Login/Register
 
