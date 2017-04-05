@@ -2,31 +2,41 @@
  * Created by colinthompson on 2017-03-30.
  */
 
-//Set Up
-var path = require('path');
-
-
 module.exports = function (app, passport) {
 
-    app.get('/', function (req, res) { //Callback for main page
-        // res.render("index.html", {root: path.join(__dirname, "../public/views/")});
-        res.render("index.html");
+    app.get('/', function (req, res) { //Callback for main pages
+        res.render("index.html", {
+            user : req.user
+        });
+
     });
 
-    app.get('/movies', function (req, res) { //Callback for main page
-        // res.render("index.html", {root: path.join(__dirname, "../public/views/")});
-        res.render("movies.html");
+    app.get('/movies', function (req, res) { //Callback for movies display
+        res.render("movies.html", {
+            user : req.user
+        });
     });
 
-    //Handler for User Login
-    app.post('/userlogin', function (req, res) {
-        var employeeLogin = { //Credentials
-            email: req.body.email,
-            password: req.body.password
-        };
 
-        console.log(employeeLogin);
-        res.send("logged in");
+    app.post('/userlogin', function (req, res, next) {
+        passport.authenticate('local-login', function (err, user, info) {
+            if (err) {
+               return next(err);
+            } else if (!user) {
+                return res.json({flashInfo: req.flash('login')}); //respond with info
+            } else {
+                req.logIn(user, function (err) {
+
+                    if (err) return next(err);
+
+                    return res.json({refresh: true})
+
+                })
+            }
+
+
+        })(req, res, next);
+
     });
 
 };

@@ -11,22 +11,38 @@
 $('#login-submit').click(function () {
     event.preventDefault(); //Don't trigger regular submit functionality
 
-    var email = $('#regEmail').val(); //Form values
+    var userEmail = $('#regEmail').val(); //Form values
     var pwd = $('#password').val();
 
     if (email == "" ||pwd == "") {
         alert("Your email or password is empty");
     } else {
-        $.post(
-            "/userlogin",
-            {'email': email, 'password': pwd},
-            function (msg) {
-                alert("success " + msg); //Todo: Replace w/ real functionality
-                $('#login-reg').modal('hide');
-        })
-            .fail(function () {
-                alert("error");
-            })
+        $.ajax({
+            type:'POST',
+            url:'userlogin',
+            data: {
+                email: userEmail,
+                password: pwd
+            },
+            dataType: "json",
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data, textStatus) {
+
+                if (data.refresh) {
+                    location.reload();
+                } else {
+                    var $errLog = $('#loginError');
+                    $errLog.html(data.flashInfo);
+                    $errLog.show();
+
+                }
+
+            }
+
+        });
+
     }
     return false;
 });
