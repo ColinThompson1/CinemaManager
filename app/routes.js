@@ -17,6 +17,10 @@ module.exports = function (app, passport) {
         });
     });
 
+    app.get('/signout', function(req, res){
+        req.logout();
+        res.redirect('/');
+    });
 
     app.post('/userlogin', function (req, res, next) {
         passport.authenticate('local-login', function (err, user, info) {
