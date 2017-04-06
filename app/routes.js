@@ -39,4 +39,24 @@ module.exports = function (app, passport) {
 
     });
 
+    app.post('/register', function (req, res, next) {
+        passport.authenticate('local-register', function (err, user, info) {
+            if (err) {
+                return next(err);
+            } else if (!user) {
+                return res.json({flashInfo: req.flash('register')}); //respond with err info
+            } else {
+                req.logIn(user, function (err) {
+
+                    if (err) return next(err);
+
+                    return res.json({refresh: true})
+
+                })
+            }
+
+        })(req, res, next);
+
+    });
+
 };
