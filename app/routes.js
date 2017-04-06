@@ -12,17 +12,11 @@ module.exports = function (app, passport) {
     });
 
     app.get('/movies', function (req, res) { //Callback for movies display
-
-
         res.render("movies.html", {
             user : req.user
         });
     });
 
-    app.get('/signout', function(req, res){
-        req.logout();
-        res.redirect('/');
-    });
 
     app.post('/userlogin', function (req, res, next) {
         passport.authenticate('local-login', function (err, user, info) {
@@ -30,27 +24,6 @@ module.exports = function (app, passport) {
                return next(err);
             } else if (!user) {
                 return res.json({flashInfo: req.flash('login')}); //respond with info
-            } else {
-                req.logIn(user, function (err) { //Login to session
-
-                    if (err) return next(err);
-
-                    return res.json({refresh: true})
-
-                })
-            }
-
-
-        })(req, res, next);
-
-    });
-
-    app.post('/register', function (req, res, next) {
-        passport.authenticate('local-register', function (err, user, info) {
-            if (err) {
-                return next(err);
-            } else if (!user) {
-                return res.json({flashInfo: req.flash('register')}); //respond with err info
             } else {
                 req.logIn(user, function (err) {
 
@@ -61,9 +34,9 @@ module.exports = function (app, passport) {
                 })
             }
 
+
         })(req, res, next);
 
     });
-
 
 };
