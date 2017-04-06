@@ -19,8 +19,8 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-xs-12">
-                                <div class="alert alert-warning" id="loginError" role="alert" style="display:none">asdfsadfas</div>
                                 <form id="login-form" method="post" role="form" style="display: block;">
+                                    <div class="alert alert-warning" id="loginError" role="alert" style="display:none">asdfsadfas</div>
                                     <div class="form-group">
                                         <input type="email" name="email" id="regEmail" tabindex="1" class="form-control" placeholder="Email" value="">
                                     </div>
@@ -49,6 +49,7 @@
                                     </div>
                                 </form>
                                 <form id="register-form" method="post" role="form" style="display: none;">
+                                    <div class="alert alert-warning" id="registerError" role="alert" style="display:none">asdfsadfas</div>
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
@@ -70,12 +71,12 @@
 
                                                         <div class="glyphicon glyphicon-calendar"></div>
                                                     </div>
-                                                    <input class="form-control datepicker" id="bday" name="bday" placeholder="Birthdate: mm/dd/yyyy" type="text"/>
+                                                    <input class="form-control datepicker" id="bday" name="bday" tabindex="3" placeholder="Birthdate: mm/dd/yyyy" type="text"/>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <select class="form-control" name="gender" id="genderInput">
+                                            <select class="form-control" name="gender" tabindex="4" id="genderInput">
                                                 <option selected disabled>Gender</option>
                                                 <option>Male</option>
                                                 <option>Female</option>
