@@ -40,11 +40,14 @@ module.exports = function (passport) {
         if (id.toString().length < 9) { //Not the best way of doing things
             query = "SELECT * FROM customers WHERE ID = ?"
         } else {
-            query = "SELECT * FROM customers WHERE SSN = ?"
+            query = "SELECT * FROM employee WHERE SSN = ?"
         }
+        console.log(query);
         sqlCon.query(query,
             [id],
             function (err, results) {
+            if (err)
+                throw err;
                 done(err, results[0]);
             }
         );
