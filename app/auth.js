@@ -125,7 +125,7 @@ module.exports = function (passport) {
                 var data = [req.body.fname, req.body.lname, req.body.bday, req.body.sex, email, password] //Form data
 
                 //Check that input isnt empty
-                if (data.includes("")) {
+                if (data.includes("") || data.includes(undefined)) {
                     console.log("[Auth] User " + email + " attempted to register with blank fields");
                     return done(null, false, req.flash("register", "Please make sure not to leave anything blank"));
                 }
@@ -143,7 +143,7 @@ module.exports = function (passport) {
                         //Check if the email has been taken
                         if (results.length > 0) {
                             console.log("[Auth] User " + email + " has already been taken");
-                            done(null, false, req.flash("register", "That email has already been taken"));
+                            return done(null, false, req.flash("register", "That email has already been taken"));
                         } else {
 
                             //User for session
@@ -158,11 +158,14 @@ module.exports = function (passport) {
 
                             sqlCon.query(
                                 "INSERT INTO customers(FNAME, LNAME, BDATE, SEX, EMAIL, `PASSWORD`) " +
-                                "VALUES (?, ?, STR_TO_DATE(?, '%m/%d/%y'), ?, ?, ?)",
+                                "VALUES (?, ?, DATE_FORMAT(STR_TO_DATE(?, '%m/%d/%Y'), '%Y-%m-%d'), ?, ?, ?)",
                                 data,
                                 function (err, results) {
+                                    if (err)
+                                        throw err;
+
                                     console.log("[Auth] Inserted user " + email + " into database");
-                                    newUser.ID = results.ID; //Add ID
+                                    newUser.ID = results.insertId; //Add ID to object
                                     return done(null, newUser);
                                 }
                             )
