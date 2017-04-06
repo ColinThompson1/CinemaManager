@@ -22,6 +22,10 @@ module.exports = function (app, passport) {
         res.redirect('/');
     });
 
+    app.get('/admin', isEmployee, function (req, res) {
+        res.redirect("http://google.ca"); //temp link until the admin panel is up and running
+    });
+
     app.post('/userlogin', function (req, res, next) {
         passport.authenticate('local-login', function (err, user, info) {
             if (err) {
@@ -62,5 +66,16 @@ module.exports = function (app, passport) {
         })(req, res, next);
 
     });
+
+    //Checks if the client has valid employee credentials
+    function isEmployee(req, res, next) {
+        if ((req.user) && (req.user.SSN)) {
+            next();
+        } else {
+            res.status(403);
+            res.send("YOU SHALL NOT PASS");
+        }
+    }
+
 
 };
