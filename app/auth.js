@@ -82,7 +82,6 @@ module.exports = function (passport) {
                                             console.log("[Auth] Could not find user");
                                             return done(null, false, req.flash("login", "A user by that name does not exist!"));
                                         }
-                                        console.log("test");
                                         return passwordCheck(results[0]); //Verify password
 
                                     }
@@ -121,26 +120,29 @@ module.exports = function (passport) {
                 passReqToCallback : true
             },
             function (req, email, password, done) {
+                console.log("[Auth] Checking register request by " + email);
                 //Grab form data
-                var data = [req.body.fname, req.body.lname, req.body.bday, req.body.gender, email, password] //Form data
+                var data = [req.body.fname, req.body.lname, req.body.bday, req.body.sex, email, password] //Form data
 
                 //Check that input isnt empty
                 if (data.includes("")) {
-                    console.log("User %s registed with empty form", email);
+                    console.log("[Auth] User " + email + " attempted to register with blank fields");
                     return done(null, false, req.flash("register", "Please make sure not to leave anything blank"));
                 }
 
                 //Check that we arent making a duplicate account
                 sqlCon.query(
-                    "SELECT * FROM customer WHERE EMAIL = ?",
+                    "SELECT * FROM customers WHERE EMAIL = ?",
                     [email],
                     function (err, results) {
                         if (err) {
-                            done(err);
+                            console.log("[Auth] Error querying for " + email);
+                            return done(err);
                         }
 
                         //Check if the email has been taken
                         if (results.length > 0) {
+                            console.log("[Auth] User " + email + " has already been taken");
                             done(null, false, req.flash("register", "That email has already been taken"));
                         } else {
 
@@ -155,11 +157,12 @@ module.exports = function (passport) {
                             };
 
                             sqlCon.query(
-                                "INSERT INTO customer(FNAME, LNAME, BDATE, SEX, EMAIL, `PASSWORD`) " +
+                                "INSERT INTO customers(FNAME, LNAME, BDATE, SEX, EMAIL, `PASSWORD`) " +
                                 "VALUES (?, ?, STR_TO_DATE(?, '%m/%d/%y'), ?, ?, ?)",
                                 data,
                                 function (err, results) {
-                                    newUser.ID = results.insertId; //Add ID
+                                    console.log("[Auth] Inserted user " + email + " into database");
+                                    newUser.ID = results.ID; //Add ID
                                     return done(null, newUser);
                                 }
                             )
