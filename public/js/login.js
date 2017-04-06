@@ -54,9 +54,9 @@ $('#register-submit').click(function () {
 
     //Grab form values
     var fName = $('#fname').val();
-    var lName = $('#fname').val();
+    var lName = $('#lname').val();
     var bday = $('#bday').val();
-    var gender = $('#gender').val();
+    var gender = $('#genderInput').val();
     var email = $('#reg-email').val();
     var pwd = $('#reg-password').val();
     var cfm = $('#confirm-password').val();
@@ -78,8 +78,8 @@ $('#register-submit').click(function () {
             data: {
                 email: email,
                 password: pwd,
-                fName: fName,
-                lName: lName,
+                fname: fName,
+                lname: lName,
                 bday: bday,
                 sex: gender
             },
