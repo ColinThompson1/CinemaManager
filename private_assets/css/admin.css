@@ -1,3 +1,21 @@
 .sidebar {
     margin-top: 0px;
 }
+
+
+/*Panel Colour Schemes*/
+
+.panel-test {
+    border-color: #b85f8b;
+}
+.panel-test > .panel-heading {
+    border-color: #a9a4e2;
+    color: white;
+    background-color: #b866a3;
+}
+.panel-test > a {
+    color: #476cb8;
+}
+.panel-test > a:hover {
+    color: #5a8b54;
+}
