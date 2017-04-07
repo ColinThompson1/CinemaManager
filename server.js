@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 
 app.set('view engine', 'html'); //Use the template module to render html
 app.engine('html', ejs.renderFile);
-app.set('views', __dirname  + "/public/views/pages"); //Instruct the engine of the location of the views
+app.set('views', __dirname); //Instruct the engine of the location of the views
 
 
 app.use(session({

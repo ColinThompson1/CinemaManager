@@ -4,16 +4,23 @@
 
 module.exports = function (app, passport) {
 
-    app.get('/', function (req, res) { //Callback for main pages
-        res.render("index.html", {
-            user : req.user
-        });
+    const VIEW_DIR_PUB = "public/views/pages/";
+    const VIEW_DIR_PRI = "private_assets/views/pages/";
+    const MAIN_DIR = __dirname.substring(0, (__dirname.lastIndexOf('/')));
 
+// Routes =============================================
+
+    app.get('/', function (req, res) { //Callback for main pages
+        res.render(VIEW_DIR_PUB + "index.html", {
+            user : req.user,
+            adminPanel: false //Whether the navbar should be customized for the admin panel or not
+        });
     });
 
     app.get('/movies', function (req, res) { //Callback for movies display
-        res.render("movies.html", {
-            user : req.user
+        res.render(VIEW_DIR_PUB + "movies.html", {
+            user : req.user,
+            adminPanel: false
         });
     });
 
@@ -23,7 +30,10 @@ module.exports = function (app, passport) {
     });
 
     app.get('/admin', isEmployee, function (req, res) {
-        res.redirect("http://google.ca"); //temp link until the admin panel is up and running
+        res.render(VIEW_DIR_PRI + "admin.html", {
+            user: req.user,
+            adminPanel: true //So navbar is generated with user profile and whatnot
+        });
     });
 
     app.post('/userlogin', function (req, res, next) {
@@ -41,8 +51,6 @@ module.exports = function (app, passport) {
 
                 })
             }
-
-
         })(req, res, next);
 
     });
@@ -66,6 +74,22 @@ module.exports = function (app, passport) {
         })(req, res, next);
 
     });
+
+// CSS and JS Routing =============================================
+
+    app.get('/sb-admin-2.min.css', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/css/sb-admin-2.min.css")
+    });
+
+    app.get('/morris-data.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/morris-data.js")
+    });
+
+    app.get('/sb-admin-2.min.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/js/sb-admin-2.min.js")
+    });
+
+// Other Middleware =============================================
 
     //Checks if the client has valid employee credentials
     function isEmployee(req, res, next) {
