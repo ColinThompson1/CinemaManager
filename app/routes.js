@@ -4,6 +4,13 @@
 
 module.exports = function (app, passport) {
 
+
+    var mysql = require('mysql');
+    var connection = require('./connection');
+
+    //Set up mysql
+    var sqlCon = mysql.createConnection(connection);
+
     const VIEW_DIR_PUB = "public/views/pages/";
     const VIEW_DIR_PRI = "private_assets/views/pages/";
     const MAIN_DIR = __dirname.substring(0, (__dirname.lastIndexOf('/')));
@@ -22,6 +29,29 @@ module.exports = function (app, passport) {
             user : req.user,
             adminPanel: false
         });
+    });
+
+    //Request for movie information
+    app.get('/movietitle', function (req, res) {
+        var movie = req.body.movieTitle;
+        if (!movie)
+            return res.status(400);
+        else {
+            sqlCon.query("", //todo: Mark, put your query here.
+                [movie],
+                function (err, results) {
+                if (err)
+                    throw err;
+                else {
+                    if (!results.length) {
+                        return res.json({err:"A movie by that name does not exist"})
+                    }
+
+                    return res.json({movie: results[0]})
+                }
+            })
+        }
+
     });
 
     app.get('/signout', function(req, res){
