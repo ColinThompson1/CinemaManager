@@ -14,8 +14,10 @@ $('#login-submit').click(function () {
     var userEmail = $('#regEmail').val(); //Form values
     var pwd = $('#password').val();
 
-    if (email == "" ||pwd == "") {
-        alert("Your email or password is empty");
+    if (userEmail == "" ||pwd == "") {
+        var $err = $('#loginError');
+        $err.html("Your have left fields blank!")
+        $err.show();
     } else {
         $.ajax({
             type:'POST',
@@ -50,23 +52,36 @@ $('#login-submit').click(function () {
 $('#register-submit').click(function () {
     event.preventDefault(); //Don't trigger regular submit functionality
 
+    //Grab form values
     var fName = $('#fname').val();
-    var lName = $('#fname').val();
+    var lName = $('#lname').val();
     var bday = $('#bday').val();
-    var gender = $('#gender').val();
+    var gender = $('#genderInput').val();
     var email = $('#reg-email').val();
     var pwd = $('#reg-password').val();
     var cfm = $('#confirm-password').val();
 
+
     if (fName == "" ||lName == "" ||bday == "" ||gender == "" ||email == "" ||pwd == "" ||cfm == "") {
-        alert("Your email or password is empty");
+        var $err = $('#registerError');
+        $err.html("At least one field has been left blank");
+        $err.show();
+
+    } else if (pwd != cfm) {
+        var $err = $('#registerError');
+        $err.html("Your password fields do not match!");
+        $err.show();
     } else {
         $.ajax({
             type:'POST',
-            url:'userlogin',
+            url:'register',
             data: {
-                email: userEmail,
-                password: pwd
+                email: email,
+                password: pwd,
+                fname: fName,
+                lname: lName,
+                bday: bday,
+                sex: gender
             },
             dataType: "json",
             xhrFields: {
@@ -77,10 +92,9 @@ $('#register-submit').click(function () {
                 if (data.refresh) {
                     location.reload();
                 } else {
-                    var $errLog = $('#loginError');
+                    var $errLog = $('#registerError');
                     $errLog.html(data.flashInfo);
                     $errLog.show();
-
                 }
 
             }

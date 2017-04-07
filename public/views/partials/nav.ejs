@@ -13,9 +13,15 @@
                         </a>
                             <ul class="dropdown-menu">
                                 <li><a href="signout">Sign Out</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#">View Profile</a></li>
-                                <li><a href="#">Book Movie</a></li>
+                                <% if (locals.user.SSN) { %>
+                                    <li><a href="admin">Admin Panel</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">View Profile</a></li>
+                                <% } else { %>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">View Profile</a></li>
+                                    <li><a href="#">Book Movie</a>
+                                <% } %>
                             </ul>
                     </li>
                     <% } else { %>
