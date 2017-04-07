@@ -122,7 +122,8 @@ body {
 
 .navbar {
     min-height:30px !important;
-    border-bottom-width: 0px;
+    margin-bottom: 0px;
+    border-bottom: 1px solid #eeeeee;
 }
 
 .navbar-brand {

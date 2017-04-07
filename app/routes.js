@@ -89,6 +89,11 @@ module.exports = function (app, passport) {
         res.sendFile(MAIN_DIR + "/private_assets/js/sb-admin-2.min.js")
     });
 
+    app.get('/admin.css', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/css/admin.css")
+    });
+
+
 // Other Middleware =============================================
 
     //Checks if the client has valid employee credentials
