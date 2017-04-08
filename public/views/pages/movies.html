@@ -11,28 +11,10 @@
 
     <script>
         function getMovies(){
-            //alert("help3");
-            var mysql = require('mysql');
-            alert("help4");
-            var connection = require('.../app/connection');
-
-            alert("help2");
-            var sqlCon = mysql.createConnection(connection);
-            var query = "SELECT * FROM MOVIE";
-
-            alert("help");
-            sqlCon.query(query, function(err,res){
-                alert("fuck");
-                if(err){
-                    alert("help");
-                    throw err;
-                }
-                console.log(res[0]);
-                alert(res[0])
-            });
-
-            alert("help");
-        }
+        $.get('/movieTitle', function(movieRecords){
+              //do stuff with movie title
+            };
+        };
     </script>
 
 <!-- Marketing messaging and featurettes
