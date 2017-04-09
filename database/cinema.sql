@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version 5.7.17-log)
-# Date: 2017-04-08 17:07:55
+# Date: 2017-04-08 20:40:10
 # Generator: MySQL-Front 6.0  (Build 1.117)
 
 
@@ -142,6 +142,27 @@ CREATE TABLE `movie` (
 INSERT INTO `movie` VALUES (1,'Beauty and the Beast','2017-02-23','02:19:00',61843,60,'../../movie_images/Beauty_and_the_Beast_2017.jpg'),(2,'Doctor Strange','2016-10-13','01:55:00',197205,86,'../../movie_images/Doctor_Strange.jpg'),(3,'Finding Dory','2016-06-17','01:40:00',523498,217,'../../movie_images/Finding_Dory.jpg'),(4,'Ghost in the Shell','2017-03-31','02:00:00',6,5000,'../../movie_images/Ghost_in_the_Shell.jpg'),(5,'Hell or High Water','2016-08-19','01:43:00',18612,190,'../../movie_images/Hell_or_High_Water.jpg'),(6,'Manchester by the Sea','2016-11-18','02:17:00',54612,126,'../../movie_images/Manchester_By_The_Sea.jpg'),(7,'Moana','2016-11-23','01:53:00',1000000,136,'../../movie_images/Moana.jpg'),(8,'Star Wars: Rogue One','2016-12-16','02:13:00',2000000,100,'../../movie_images/Rogue_One_A_Star_Wars_Story.jpg'),(9,'Spider-Man: Homecoming','2017-06-17','00:00:00',0,0,'../../movie_images/Spiderman_Homecoming.jpg'),(10,'The Jungle Book','2016-04-15','01:51:00',500000,269,'../../movie_images/The_Jungle_Book.jpg'),(11,'The Circle','2017-04-28','00:00:00',0,0,'../../movie_images/The_Circle.jpg'),(12,'Baywatch','2017-05-26','00:00:00',0,0,'../../movie_images/Baywatch.jpg');
 
 #
+# Structure for table "review"
+#
+
+DROP TABLE IF EXISTS `review`;
+CREATE TABLE `review` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CONTENT` varchar(255) DEFAULT NULL,
+  `RATING` int(2) DEFAULT NULL,
+  `MOVIE_ID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `MOVIE_ID` (`MOVIE_ID`),
+  CONSTRAINT `review_ibfk_1` FOREIGN KEY (`MOVIE_ID`) REFERENCES `movie` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+
+#
+# Data for table "review"
+#
+
+INSERT INTO `review` VALUES (1,'\"Awesome music, CGI, action, and story! I\'d give this a 10 but the beginning is slow and a bit confusing, and there isn\'t enough Darth Vader…\"',8,8),(2,'\"Emma Watson was great. Otherwise, not a bad rendition of the movie. Some continuity errors. The original was better by far though.\"',6,1),(3,'\"Amazing follow up to a classic! My kid and I loved the original movie and this movie is a great spiritual successor to such a classic. 9/10!\"',9,3),(4,'\"lol this is too fruity\"',1,7),(5,'\"mediocre rendition. Good CGI and idea, but doesn\'t go nearly in depth, have meaning, or the flair of the original. \"',5,4),(6,'\"Hell or High Water is a genre film that transcends genre, an iconic American tale that is nonetheless firmly grounded in both place and time.\"',10,5),(7,'\"I\'d probably love this movie, but the auditorim was way too loud, and the goers were way too disruptive, along with the state of the place! This review is more for the theatre.\"',6,6),(8,'\"Tense, intensive, high impact, and witty. Doctor Strange in a nutshell. Great movie. Would watch again!\"',8,2),(9,'\"It\'s not a bad movie, but it\'s been airing in this theatre for a long time. I think it\'s time to shelve it.\"',6,10),(10,'\"Why is the copy of the movie shown so low quality? And the people watching it were terrible. Awful experience.\"',2,6),(11,'\"Good standalone movie, but for something that\'s supposed to be a Finding Nemo sequel, it falls short.\"',7,3),(12,'\"It\'s not a bad movie by any means, but there\'s so many stupid Superhero movies… Can\'t there be something new, like a good fantasy movie not tied to comic books for once??\"',5,2),(13,'\"Great, mysterious, captivating, and awe inspiring.\"',8,10),(14,'\"Great CGI, thought provoking, and Scarlett Johansson alone makes the movie great. You could say I\'m her biggest fan… :)\"',8,4),(15,'\"lol way too edgy… try harder…\"',5,5),(16,'\"A bit light on the Force related aspects of the series, but otherwise a pretty good movie, and a good tie in for the Prequels and the OT. Worth your time and money. The ending is especially worth it.\"',7,8),(17,'\"washed up actor only good in one series trying another show…. Nice job disney, pushing your misogynistic views on everyone… terrible, disgusting….\"',2,1),(18,'\"One of the worst movies of 2016. Why this is still airing is beneath me. Don\'t waste your time or your money on this garbage.\"',4,7);
+
+#
 # Structure for table "showing"
 #
 
@@ -197,7 +218,7 @@ CREATE TABLE `tickets` (
   KEY `CUSTOMER_ID` (`CUSTOMER_ID`),
   CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`SHOWING_ID`) REFERENCES `showing` (`ID`) ON UPDATE CASCADE,
   CONSTRAINT `tickets_ibfk_2` FOREIGN KEY (`CUSTOMER_ID`) REFERENCES `customers` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "tickets"
