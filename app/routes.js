@@ -105,6 +105,65 @@ module.exports = function (app, passport) {
 
     });
 
+// Graphs =============================================
+
+    app.get('/rev-time-graph.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/rev-time-graph.js")
+    });
+
+    app.get('/movie-popularity.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/movie-popularity.js")
+    });
+
+
+// Graph Data =============================================
+
+    app.post('/rev-time-graph-data', isEmployee, function (req, res) {
+
+        sqlCon.query(
+            "SELECT TITLE, EARNINGS FROM movie WHERE RELEASE_DATE < CURRENT_DATE();",
+            function (err, results) {
+
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+                var graphData = [];
+                for (var i = 0; i < results.length; i++) { //Creates a list of string literals
+                    var row = results[i];
+
+                    graphData.push({Title: row.TITLE, Revenue: row.EARNINGS})
+                }
+                return res.json(graphData)
+            }
+        );
+    });
+
+    app.post('/popularity-graph-data', isEmployee, function (req, res) {
+
+        return res.json({label: 'Mona', value: 109023}, {label: 'Finding Dory', value: 125345}, {label: 'Doctor Strange', value: 348982});
+        //todo: add query
+        // sqlCon.query(
+        //     "",
+        //     function (err, results) {
+        //
+        //         if (err)
+        //             throw err;
+        //         if (!results.length)
+        //             res.status(404);
+        //
+        //         var graphData = [];
+        //         for (var i = 0; i < results.length; i++) { //Creates a list of string literals
+        //             var row = results[i];
+        //
+        //             graphData.push({Title: row.TITLE, Revenue: row.EARNINGS})
+        //         }
+        //         return res.json(graphData)
+        //     }
+        // );
+    });
+
 // CSS and JS Routing =============================================
 
     app.get('/sb-admin-2.min.css', isEmployee, function (req, res) {
@@ -122,7 +181,6 @@ module.exports = function (app, passport) {
     app.get('/admin.css', isEmployee, function (req, res) {
         res.sendFile(MAIN_DIR + "/private_assets/css/admin.css")
     });
-
 
 // Other Middleware =============================================
 
