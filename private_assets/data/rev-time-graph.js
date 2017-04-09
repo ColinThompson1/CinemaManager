@@ -16,14 +16,23 @@ $().ready(function () {
                 xkey: 'Title',
                 ykeys: ['Revenue'],
                 labels: ['Revenue'],
+                barColors: ['#5CB85C', '#447604', '#6CC551', '#9FFCDF', '#52AD9C', '#47624F'], //todo mix up the colours a bit
                 hideHover: true,
-                resize: true,
-                xLabelAngle: 35
+                xLabelAngle: 40,
+                resize: true
             });
 
             $('svg').height(380);
 
         }
+    });
+
+    $(window).resize(function () {
+        setTimeout(function () {
+            $('svg').height(380);
+        }, 2000)
+
     })
+
 
 });

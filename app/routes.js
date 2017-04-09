@@ -54,16 +54,48 @@ module.exports = function (app, passport) {
 
     });
 
-    app.get('/signout', function(req, res){
-        req.logout();
-        res.redirect('/');
-    });
+// Admin Panel Routing =============================================
 
     app.get('/admin', isEmployee, function (req, res) {
         res.render(VIEW_DIR_PRI + "admin.html", {
             user: req.user,
             adminPanel: true //So navbar is generated with user profile and whatnot
         });
+    });
+
+    app.get('/concession_details', isEmployee, function (req, res) {
+        res.render(VIEW_DIR_PRI + "concession_details.html", {
+            user: req.user,
+            adminPanel: true
+        });
+    })
+
+    ;app.get('/movie_details', isEmployee, function (req, res) {
+        res.render(VIEW_DIR_PRI + "movie_details.html", {
+            user: req.user,
+            adminPanel: true
+        });
+    })
+
+    ;app.get('/statistics', isEmployee, function (req, res) {
+        res.render(VIEW_DIR_PRI + "statistics.html", {
+            user: req.user,
+            adminPanel: true
+        });
+    })
+
+    ;app.get('/user_details', isEmployee, function (req, res) {
+        res.render(VIEW_DIR_PRI + "user_details.html", {
+            user: req.user,
+            adminPanel: true
+        });
+    });
+
+// Authentication Routes =============================================
+
+    app.get('/signout', function(req, res){
+        req.logout();
+        res.redirect('/');
     });
 
     app.post('/userlogin', function (req, res, next) {
@@ -142,7 +174,7 @@ module.exports = function (app, passport) {
 
     app.post('/popularity-graph-data', isEmployee, function (req, res) {
 
-        return res.json({label: 'Mona', value: 109023}, {label: 'Finding Dory', value: 125345}, {label: 'Doctor Strange', value: 348982});
+        return res.json([{label: 'Mona', value: 109023}, {label: 'Finding Dory', value: 125345}, {label: 'Doctor Strange', value: 348982}]);
         //todo: add query
         // sqlCon.query(
         //     "",

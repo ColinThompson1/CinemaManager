@@ -11,9 +11,8 @@ $().ready(function () {
         url: 'popularity-graph-data',
         dataType: 'json',
         success: function (ticketSales, textStatus) {
-            console.log(ticketSales);
             new Morris.Donut({
-                element: 'populritygraph',
+                element: 'popularity-graph',
                 data: ticketSales,
                 resize: true
             });
