@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <% include ../partials/head %>
+    <title>Browse Movies</title>
 </head>
 <body onload="getMovies()">
 
@@ -11,11 +12,22 @@
 
     <script>
         function getMovies(){
-        $.get('/movieTitle', function(movieRecords){
-              //do stuff with movie title
-            };
+            $.post('movietitles')
+                .done(function(res){
+
+                    for(var i=0; i < 10; i++){
+                        $('#movie' + i).text(res[i].TITLE);
+                        $('#movie' + i + 'pic').attr("src", res[i].POSTER_PATH);
+                        $('#movieButton' + i).data('title', res[i].TITLE);
+                    }
+                })
+                .fail(function(){
+                    alert("error");
+                });
         };
     </script>
+
+
 
 <!-- Marketing messaging and featurettes
 ================================================== -->
@@ -27,15 +39,23 @@
         <div class="row">
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <img src="..." alt="...">
+                    <img id="movie1pic" src="..." height="1024" width="691"/>
                     <div class="caption">
-                        <h3>
-                            <script>
-                                document.write(Date());
-                            </script>
-                        </h3>
+
+                        <h3 id="movie1" name="moveTitle"></h3>
+                        <a href="#" id="movieButton1" class="btn btn-primary" role="button" data-toggle="modal" data-id="1" data-title="test" data-target="#book-ticket">Book Ticket</a>
+                        <a href="#" class="btn btn-default" role="button">Reviews</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img id="movie2pic" src="..." height="1024" width="691"/>
+                    <div class="caption">
+                        <h3 id="movie2"></h3>
                         <p>
-                            <a href="#" class="btn btn-primary" role="button" data-toggle="modal" data-target="#book-ticket">Book Ticket</a>
+                            <a href="#" class="btn btn-primary" role="button" data-toggle="#book-ticket">Book Ticket</a>
                             <a href="#" class="btn btn-default" role="button">Reviews</a>
                         </p>
                     </div>
@@ -44,24 +64,9 @@
 
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <img src="..." alt="...">
+                    <img id="movie3pic" src="..." height="1024" width="691"/>
                     <div class="caption">
-                        <h3>Movie #2</h3>
-                        <p>Movie Summary</p>
-                        <p>
-                            <a href="#" class="btn btn-primary" role="button">Book Ticket</a>
-                            <a href="#" class="btn btn-default" role="button">Reviews</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-md-4">
-                <div class="thumbnail">
-                    <img src="..." alt="...">
-                    <div class="caption">
-                        <h3>Movie #3</h3>
-                        <p>Movie Summary</p>
+                        <h3 id="movie3"></h3>
                         <p>
                             <a href="#" class="btn btn-primary" role="button">Book Ticket</a>
                             <a href="#" class="btn btn-default" role="button">Reviews</a>
@@ -75,9 +80,9 @@
         <div class="row">
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <img src="..." alt="...">
+                    <img id="movie4pic" src="..." height="1024" width="691"/>
                     <div class="caption">
-                        <h3>Movie #4</h3>
+                        <h3 id="movie4"></h3>
                         <p>
                             <a href="#" class="btn btn-primary" role="button">Book Ticket</a>
                             <a href="#" class="btn btn-default" role="button">Reviews</a>
@@ -88,9 +93,9 @@
 
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <img src="..." alt="...">
+                    <img id="movie5pic" src="..." height="1024" width="691"/>
                     <div class="caption">
-                        <h3>Movie #5</h3>
+                        <h3 id="movie5"></h3>
                         <p>
                             <a href="#" class="btn btn-primary" role="button">Book Ticket</a>
                             <a href="#" class="btn btn-default" role="button">Reviews</a>
@@ -101,9 +106,9 @@
 
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <img src="..." alt="...">
+                    <img id="movie6pic" src="..." height="1024" width="691"/>
                     <div class="caption">
-                        <h3>Movie #6</h3>
+                        <h3 id="movie6"></h3>
                         <p>
                             <a href="#" class="btn btn-primary" role="button">Book Ticket</a>
                             <a href="#" class="btn btn-default" role="button">Reviews</a>
@@ -117,9 +122,9 @@
         <div class="row">
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <img src="..." alt="...">
+                    <img id="movie7pic" src="..." height="1024" width="691"/>
                     <div class="caption">
-                        <h3>Movie #7</h3>
+                        <h3 id="movie7"></h3>
                         <p>
                             <a href="#" class="btn btn-primary" role="button">Book Ticket</a>
                             <a href="#" class="btn btn-default" role="button">Reviews</a>
@@ -130,9 +135,9 @@
 
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <img src="..." alt="...">
+                    <img id="movie8pic" src="..." height="1024" width="691"/>
                     <div class="caption">
-                        <h3>Movie #8</h3>
+                        <h3 id="movie8"></h3>
                         <p>
                             <a href="#" class="btn btn-primary" role="button">Book Ticket</a>
                             <a href="#" class="btn btn-default" role="button">Reviews</a>
@@ -143,9 +148,9 @@
 
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
-                    <img src="..." alt="...">
+                    <img id="movie9pic" src="..." height="1024" width="691"/>
                     <div class="caption" onload="">
-                        <h3>Movie #9</h3>
+                        <h3 id="movie9"></h3>
                         <p>
                             <a href="#" class="btn btn-primary" role="button">Button</a>
                             <a href="#" class="btn btn-default" role="button">Button</a>
@@ -166,13 +171,13 @@
     </div><!-- /.container -->
 
 
-
     <% include ../partials/bookticket %>
 
     <% include ../partials/movieDetail %>
 
     <% include ../partials/foot %>
 
+    <script src="../../js/bookticket.js"></script>
 </body>
 </html>
 
