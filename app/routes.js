@@ -32,70 +32,60 @@ module.exports = function (app, passport) {
     });
 
     //Request for movie information
-    app.get('/movietitle', function (req, res) {
-        var movie = req.body.movieTitle;
-        if (!movie)
-            return res.status(400);
-        else {
-            sqlCon.query("", //todo: Mark, put your query here.
-                [movie],
-                function (err, results) {
+    app.post('/movietitles', function (req, res) {
+        sqlCon.query("SELECT * FROM movie",
+            function (err, results) {
                 if (err)
                     throw err;
                 else {
-                    if (!results.length) {
-                        return res.json({err:"A movie by that name does not exist"})
-                    }
+                    var movies = [];
 
-                    return res.json({movie: results[0]})
+                    for(var i=0; i < results.length; i++)
+                        movies.push({ID: results[i].ID, TITLE: results[i].TITLE, RELEASE_DATE: results[i].RELEASE_DATE,
+                            LENGTH: results[i].LENGTH, EARNINGS: results[i].EARNINGS, AIR_LENGTH:[i].AIR_LENGTH,
+                            POSTER_PATH: results[i].POSTER_PATH});
+
+                    return res.json(movies);
                 }
             })
+    });
+
+    app.post('/bookmovie', function (req, res) {
+        var movie = req.body.movieTitle;
+        if (!movie){
+            return res.status(400);
+        }else {
+
+            sqlCon.query("SELECT * FROM movie WHERE TITLE = '" + movie + "'", //todo: Mark, put your query here.
+                [movie],
+                function (err, results) {
+                    if (err)
+                        throw err;
+                    else {
+                        if (!results.length) {
+                            return res.json({err:"A movie by that name does not exist"})
+                        }
+
+                        console.log(results[0]);
+                        return res.json({ID: results[0].ID, TITLE: results[0].TITLE, RELEASE_DATE: results[0].RELEASE_DATE,
+                            LENGTH: results[0].LENGTH, EARNINGS: results[0].EARNINGS, AIR_LENGTH:[0].AIR_LENGTH,
+                            POSTER_PATH: results[0].POSTER_PATH});
+                    }
+                })
         }
 
     });
 
-// Admin Panel Routing =============================================
+    app.get('/signout', function(req, res){
+        req.logout();
+        res.redirect('/');
+    });
 
     app.get('/admin', isEmployee, function (req, res) {
         res.render(VIEW_DIR_PRI + "admin.html", {
             user: req.user,
             adminPanel: true //So navbar is generated with user profile and whatnot
         });
-    });
-
-    app.get('/concession_details', isEmployee, function (req, res) {
-        res.render(VIEW_DIR_PRI + "concession_details.html", {
-            user: req.user,
-            adminPanel: true
-        });
-    })
-
-    ;app.get('/movie_details', isEmployee, function (req, res) {
-        res.render(VIEW_DIR_PRI + "movie_details.html", {
-            user: req.user,
-            adminPanel: true
-        });
-    })
-
-    ;app.get('/statistics', isEmployee, function (req, res) {
-        res.render(VIEW_DIR_PRI + "statistics.html", {
-            user: req.user,
-            adminPanel: true
-        });
-    })
-
-    ;app.get('/user_details', isEmployee, function (req, res) {
-        res.render(VIEW_DIR_PRI + "user_details.html", {
-            user: req.user,
-            adminPanel: true
-        });
-    });
-
-// Authentication Routes =============================================
-
-    app.get('/signout', function(req, res){
-        req.logout();
-        res.redirect('/');
     });
 
     app.post('/userlogin', function (req, res, next) {
@@ -137,65 +127,6 @@ module.exports = function (app, passport) {
 
     });
 
-// Graphs =============================================
-
-    app.get('/rev-time-graph.js', isEmployee, function (req, res) {
-        res.sendFile(MAIN_DIR + "/private_assets/data/rev-time-graph.js")
-    });
-
-    app.get('/movie-popularity.js', isEmployee, function (req, res) {
-        res.sendFile(MAIN_DIR + "/private_assets/data/movie-popularity.js")
-    });
-
-
-// Graph Data =============================================
-
-    app.post('/rev-time-graph-data', isEmployee, function (req, res) {
-
-        sqlCon.query(
-            "SELECT TITLE, EARNINGS FROM movie WHERE RELEASE_DATE < CURRENT_DATE();",
-            function (err, results) {
-
-                if (err)
-                    throw err;
-                if (!results.length)
-                    res.status(404);
-
-                var graphData = [];
-                for (var i = 0; i < results.length; i++) { //Creates a list of string literals
-                    var row = results[i];
-
-                    graphData.push({Title: row.TITLE, Revenue: row.EARNINGS})
-                }
-                return res.json(graphData)
-            }
-        );
-    });
-
-    app.post('/popularity-graph-data', isEmployee, function (req, res) {
-
-        return res.json([{label: 'Mona', value: 109023}, {label: 'Finding Dory', value: 125345}, {label: 'Doctor Strange', value: 348982}]);
-        //todo: add query
-        // sqlCon.query(
-        //     "",
-        //     function (err, results) {
-        //
-        //         if (err)
-        //             throw err;
-        //         if (!results.length)
-        //             res.status(404);
-        //
-        //         var graphData = [];
-        //         for (var i = 0; i < results.length; i++) { //Creates a list of string literals
-        //             var row = results[i];
-        //
-        //             graphData.push({Title: row.TITLE, Revenue: row.EARNINGS})
-        //         }
-        //         return res.json(graphData)
-        //     }
-        // );
-    });
-
 // CSS and JS Routing =============================================
 
     app.get('/sb-admin-2.min.css', isEmployee, function (req, res) {
@@ -213,6 +144,7 @@ module.exports = function (app, passport) {
     app.get('/admin.css', isEmployee, function (req, res) {
         res.sendFile(MAIN_DIR + "/private_assets/css/admin.css")
     });
+
 
 // Other Middleware =============================================
 
