@@ -32,29 +32,54 @@ module.exports = function (app, passport) {
     });
 
     //Request for movie information
-    app.get('/movietitle', function (req, res) {
-        var movie = req.body.movieTitle;
-        if (!movie)
-            return res.status(400);
-        else {
-            sqlCon.query("", //todo: Mark, put your query here.
-                [movie],
-                function (err, results) {
+    app.post('/movietitles', function (req, res) {
+        sqlCon.query("SELECT * FROM movie",
+            function (err, results) {
                 if (err)
                     throw err;
                 else {
-                    if (!results.length) {
-                        return res.json({err:"A movie by that name does not exist"})
-                    }
+                    var movies = [];
 
-                    return res.json({movie: results[0]})
+                    for(var i=0; i < results.length; i++)
+                        movies.push({ID: results[i].ID, TITLE: results[i].TITLE, RELEASE_DATE: results[i].RELEASE_DATE,
+                            LENGTH: results[i].LENGTH, EARNINGS: results[i].EARNINGS, AIR_LENGTH:[i].AIR_LENGTH,
+                            POSTER_PATH: results[i].POSTER_PATH});
+
+                    return res.json(movies);
                 }
             })
+    });
+
+    app.post('/bookmovie', function (req, res) {
+        var movie = req.body.movieTitle;
+        if (!movie){
+            return res.status(400);
+        }else {
+
+            sqlCon.query("SELECT * FROM movie WHERE TITLE = '" + movie + "'", //todo: Mark, put your query here.
+                [movie],
+                function (err, results) {
+                    if (err)
+                        throw err;
+                    else {
+                        if (!results.length) {
+                            return res.json({err:"A movie by that name does not exist"})
+                        }
+
+                        console.log(results[0]);
+                        return res.json({ID: results[0].ID, TITLE: results[0].TITLE, RELEASE_DATE: results[0].RELEASE_DATE,
+                            LENGTH: results[0].LENGTH, EARNINGS: results[0].EARNINGS, AIR_LENGTH:[0].AIR_LENGTH,
+                            POSTER_PATH: results[0].POSTER_PATH});
+                    }
+                })
         }
 
     });
 
-// Admin Panel Routing =============================================
+    app.get('/signout', function(req, res){
+        req.logout();
+        res.redirect('/');
+    });
 
     app.get('/admin', isEmployee, function (req, res) {
         res.render(VIEW_DIR_PRI + "admin.html", {
