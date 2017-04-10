@@ -137,7 +137,7 @@ module.exports = function (app, passport) {
 
     });
 
-// Graphs =============================================
+// Graphs And Charts =============================================
 
     app.get('/rev-time-graph.js', isEmployee, function (req, res) {
         res.sendFile(MAIN_DIR + "/private_assets/data/rev-time-graph.js")
@@ -145,6 +145,10 @@ module.exports = function (app, passport) {
 
     app.get('/movie-popularity.js', isEmployee, function (req, res) {
         res.sendFile(MAIN_DIR + "/private_assets/data/movie-popularity.js")
+    });
+
+    app.get('/user-dash-data.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/user-dash-data.js")
     });
 
 
@@ -195,6 +199,54 @@ module.exports = function (app, passport) {
         //     }
         // );
     });
+
+// Chart Data =============================================
+
+    app.post('/user-dashboard', isEmployee, function (req, res) {
+
+        //Fill with user dashboard data
+        var data = {
+            cust: [] //Customer chart info
+        };
+        data.cust.push({test: 'test'});
+
+        //Query for customer data
+        sqlCon.query(
+            "SELECT * FROM customers;",
+            [],
+            function (err, results) {
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+                console.log("once tops");
+
+                var row = results[0];
+                console.log({id: row.ID, fName: row.FNAME, lName: row.LNAME, bDay: row.BDAY, sex: row.SEX, address: row.ADDRESS, credit: row.CREDIT_CARD_NO, email: row.EMAIL, phone: row.PHONE});
+                data.cust.push({ id: 1,
+                    fName: 'Rolando',
+                    lName: 'Hoeppner',
+                    bDay: 'asdf',
+                    sex: 'M',
+                    address: '78 Talbot Drive Princeton, NJ 08540',
+                    credit: 8943486628520170,
+                    email: 'Hoeppner@hotmail.com',
+                    phone: 'asdfhjk' });
+
+                // for (var i = 0; i < results.length; i++) {
+                //     var row = results[i];
+                //
+                //     data.cust.push({id: row.ID, fName: row.FNAME, lName: row.LNAME, bDay: row.BDAY, sex: row.SEX, address: row.ADDRESS, credit: row.CREDIT_CARD_NO, email: row.EMAIL, phone: row.PHONE});
+                // }
+            }
+        );
+
+        console.log(data);
+        return res.json(data);
+
+    });
+
 
 // CSS and JS Routing =============================================
 
