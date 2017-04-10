@@ -16,7 +16,4 @@ $('#book-ticket').on('show.bs.modal', function (event) {
         .fail(function(){
             alert("error");
         });
-
-
-    //modal.find('.modal-body input').val(recipient)
 });

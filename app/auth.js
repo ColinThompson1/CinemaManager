@@ -42,7 +42,6 @@ module.exports = function (passport) {
         } else {
             query = "SELECT * FROM employee WHERE SSN = ?"
         }
-        console.log(query);
         sqlCon.query(query,
             [id],
             function (err, results) {

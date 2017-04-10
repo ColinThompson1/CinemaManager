@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../../../public/views/partials/head %>
+    <title>Cinema Admin Panel</title>
+    <% include ../partials/admin_resources_head %>
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <% include ../../../public/views/partials/nav %>
+
+        <% include ../partials/sidebar %>
+
+        <div id="page-wrapper">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Dashboard</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+<!-- Panels
+================================================== -->
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <img src="main_page_images/cinemaIcon2White.png" style="width: 70px; height: 70px">
+                                    <!--<i class="fa fa-comments fa-5x"></i>-->
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">26</div>
+                                    <div>Movie Sales</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="movie_details">
+                            <div class="panel-footer">
+                                <span class="pull-left">Manage Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-users fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">12</div>
+                                    <div>Total Users</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="user_details">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Users</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <img src="main_page_images/concessionIconwhite.png" style="width: 80px; height: 75px; margin-left: -10px;">
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">124</div>
+                                    <div>Concession Orders</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="concession_details">
+                            <div class="panel-footer">
+                                <span class="pull-left">More Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <img src="main_page_images/statsIconWhite.png" style="width: 70px; height: 70px">
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">13</div>
+                                    <div>Positive Comments</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="statistics">
+                            <div class="panel-footer">
+                                <span class="pull-left">Comments and Statistics</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+
+<!-- Revenue-Title Graph
+================================================== -->
+                <div class="col-lg-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Revenue vs Movie Title
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div id="movierevgraph"></div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+
+<!-- Donut Graph
+================================================== -->
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bar-chart-o fa-fw"></i> Movie Popularity
+                        </div>
+                        <div class="panel-body">
+                            <div id="popularity-graph"></div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel .chat-panel -->
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <% include ../../../public/views/partials/foot %>
+    <% include ../partials/admin_resources_foot %>
+    <script src="rev-time-graph.js"></script>
+    <script src="movie-popularity.js"></script>
+
+</body>
+
+</html>
