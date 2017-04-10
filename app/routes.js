@@ -206,9 +206,9 @@ module.exports = function (app, passport) {
 
         //Fill with user dashboard data
         var data = {
-            cust: [] //Customer chart info
+            cust: [], //Customer chart info
+            emp: []
         };
-        data.cust.push({test: 'test'});
 
         //Query for customer data
         sqlCon.query(
@@ -220,30 +220,37 @@ module.exports = function (app, passport) {
                 if (!results.length)
                     res.status(404);
 
-                console.log("once tops");
 
-                var row = results[0];
-                console.log({id: row.ID, fName: row.FNAME, lName: row.LNAME, bDay: row.BDAY, sex: row.SEX, address: row.ADDRESS, credit: row.CREDIT_CARD_NO, email: row.EMAIL, phone: row.PHONE});
-                data.cust.push({ id: 1,
-                    fName: 'Rolando',
-                    lName: 'Hoeppner',
-                    bDay: 'asdf',
-                    sex: 'M',
-                    address: '78 Talbot Drive Princeton, NJ 08540',
-                    credit: 8943486628520170,
-                    email: 'Hoeppner@hotmail.com',
-                    phone: 'asdfhjk' });
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
 
-                // for (var i = 0; i < results.length; i++) {
-                //     var row = results[i];
-                //
-                //     data.cust.push({id: row.ID, fName: row.FNAME, lName: row.LNAME, bDay: row.BDAY, sex: row.SEX, address: row.ADDRESS, credit: row.CREDIT_CARD_NO, email: row.EMAIL, phone: row.PHONE});
-                // }
+                    data.cust.push({id: row.ID, fName: row.FNAME, lName: row.LNAME, bDay: row.BDATE, sex: row.SEX, address: row.ADDRESS, credit: row.CREDIT_CARD_NO, email: row.EMAIL, phone: row.PHONE_NO});
+                }
+
+
+                sqlCon.query(
+                    "SELECT e.SSN, e.FNAME, e.LNAME, e.BDATE, e.SEX, e.ADDRESS, e.PHONE_NO, e.SALARY, e.EMAIL, d.DNAME " +
+                    "FROM employee as e, department as d " +
+                    "WHERE e.DNO = d.DNO",
+                    [],
+                    function (err, results) {
+                        if (err)
+                            throw err;
+                        if (!results.length)
+                            res.status(404);
+
+                        for (var i = 0; i < results.length; i++) {
+                            var row = results[i];
+
+                            data.emp.push({ssn: row.SSN, fName: row.FNAME, lName: row.LNAME, bDay: row.BDATE, sex: row.SEX, address: row.ADDRESS, salary: row.SALARY, email: row.EMAIL, phone: row.PHONE_NO, dept: row.DNAME});
+                        }
+
+                        return res.json(data);
+
+                    });
             }
         );
 
-        console.log(data);
-        return res.json(data);
 
     });
 
