@@ -8,6 +8,8 @@
 
     <% include ../partials/admin_resources_head %>
 
+    <% include ../partials/tables-head %>
+
 </head>
 <body>
 
@@ -31,24 +33,26 @@
         <div class="row">
             <div class="col-md-8">
                 <div class="panel panel-info">
-                    <div class="panel-heading">Customer Lookup</div>
+                    <div class="panel-heading"><h3 style="margin: 2px">Customer Lookup</h3></div>
                     <div class="panel-body">
-                        <table width="100%" class="table table-striped table-bordered table-hover" id="customer-lookup">
-                            <thead>
-                                <th>ID</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Birthdate</th>
-                                <th>Sex</th>
-                                <th>Address</th>
-                                <th>Credit Card #</th>
-                                <th>Email</th>
-                                <th>Phone #</th>
-                            </thead>
-                            <tbody id="cust-lookup-body">
+                        <div class="table-responsive">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="customer-lookup">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Birthdate</th>
+                                    <th>Sex</th>
+                                    <th>Address</th>
+                                    <th>Credit Card #</th>
+                                    <th>Email</th>
+                                    <th>Phone #</th>
+                                </thead>
+                                <tbody id="cust-lookup-body">
                                 <!--Add rows in js-->
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -56,6 +60,43 @@
 
 
             </div>
+
+        </div>
+        <div class="row">
+            <hr>
+            <div class="col-md-8">
+                <div class="panel panel-success">
+                    <div class="panel-heading"><h3 style="margin: 2px">Employee Lookup</h3></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="employee-lookup">
+                                <thead>
+                                    <th>SSN</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Birthdate</th>
+                                    <th>Department</th>
+                                    <th>Sex</th>
+                                    <th>Address</th>
+                                    <th>Phone #</th>
+                                    <th>Salary</th>
+                                    <th>Email</th>
+                                </thead>
+                                <tbody id="emp-lookup-body">
+                                <!--Add rows in js-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+
+
+            </div>
+
+
+
 
         </div>
 
@@ -70,6 +111,8 @@
 <% include ../../../public/views/partials/foot %>
 
 <% include ../partials/admin_resources_foot %>
+
+<% include ../partials/tables-foot %>
 
 <script src="user-dash-data.js"></script>
 
