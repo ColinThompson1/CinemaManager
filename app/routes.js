@@ -82,10 +82,78 @@ module.exports = function (app, passport) {
     });
 
     app.get('/admin', isEmployee, function (req, res) {
-        res.render(VIEW_DIR_PRI + "admin.html", {
-            user: req.user,
-            adminPanel: true //So navbar is generated with user profile and whatnot
-        });
+
+        var c = { //Data for dashboard overview panels
+            num_tickets: undefined,
+            num_users: undefined,
+            num_conc: undefined,
+            num_com:undefined
+        };
+
+        render = function () {
+            res.render(VIEW_DIR_PRI + "admin.html", {
+                user: req.user,
+                adminPanel: true, //So navbar is generated with user profile and whatnot
+                panelData: c
+            });
+        };
+
+        //Grab data for dashboard overview panels
+        sqlCon.query(
+            "SELECT COUNT(ID) FROM tickets;",
+            function (err, results) {
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+                c.num_tickets = results[0]['COUNT(ID)'];
+
+                sqlCon.query(
+                    "SELECT COUNT(ID) FROM customers;",
+                    function (err, results) {
+                        if (err)
+                            throw err;
+                        if (!results.length)
+                            res.status(404);
+
+                        c.num_users = results[0]['COUNT(ID)'];
+
+                        sqlCon.query(
+                            "SELECT sum(ORDERED) FROM concessions;",
+                            function (err, results) {
+                                if (err)
+                                    throw err;
+                                if (!results.length)
+                                    res.status(404);
+
+                                c.num_conc = results[0]['sum(ORDERED)'];
+
+
+                                sqlCon.query(
+                                    "SELECT count(RATING) FROM review WHERE RATING > 7;",
+                                    function (err, results) {
+                                        if (err)
+                                            throw err;
+                                        if (!results.length)
+                                            res.status(404);
+
+                                        c.num_com = results[0]['count(RATING)'];
+
+                                        render();
+
+                                    }
+                                );
+                            }
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+
     });
 
     app.get('/concession_details', isEmployee, function (req, res) {
@@ -203,26 +271,28 @@ module.exports = function (app, passport) {
 
     app.post('/popularity-graph-data', isEmployee, function (req, res) {
 
-        return res.json([{label: 'Mona', value: 109023}, {label: 'Finding Dory', value: 125345}, {label: 'Doctor Strange', value: 348982}]);
-        //todo: add query
-        // sqlCon.query(
-        //     "",
-        //     function (err, results) {
-        //
-        //         if (err)
-        //             throw err;
-        //         if (!results.length)
-        //             res.status(404);
-        //
-        //         var graphData = [];
-        //         for (var i = 0; i < results.length; i++) { //Creates a list of string literals
-        //             var row = results[i];
-        //
-        //             graphData.push({Title: row.TITLE, Revenue: row.EARNINGS})
-        //         }
-        //         return res.json(graphData)
-        //     }
-        // );
+        // return res.json([{label: 'Mona', value: 109023}, {label: 'Finding Dory', value: 125345}, {label: 'Doctor Strange', value: 348982}]);
+        sqlCon.query(
+            "SELECT M.TITLE, COUNT(T.SHOWING_ID) " +
+            "FROM MOVIE M, SHOWING S, TICKETS T " +
+            "WHERE S.MOVIE_ID = M.ID AND T.SHOWING_ID = S.ID " +
+            "GROUP BY M.TITLE",
+            function (err, results) {
+
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+                var graphData = [];
+                for (var i = 0; i < results.length; i++) { //Creates a list of string literals
+                    var row = results[i];
+
+                    graphData.push({label: row.TITLE, value: row['COUNT(T.SHOWING_ID)']})
+                }
+                return res.json(graphData)
+            }
+        );
     });
 
 // Chart Data =============================================
