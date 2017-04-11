@@ -382,6 +382,10 @@ module.exports = function (app, passport) {
         res.sendFile(MAIN_DIR + "/private_assets/data/comments-data.js")
     });
 
+    app.get('/customer-demographics-data.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/customer-demographics-data.js")
+    });
+
 
 // Graph Data =============================================
 
@@ -472,6 +476,34 @@ module.exports = function (app, passport) {
                     graphData.push({label: row.ITEM, value: row.ORDERED})
                 }
                 return res.json(graphData)
+            }
+        );
+    });
+
+    app.post('/ages-graph', isEmployee, function (req, res) {
+
+        sqlCon.query(
+            "SELECT BDATE FROM customers;",
+            function (err, results) {
+
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+                var graphData = [];
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                }
+
+
+                return res.json([{label: 'Ages 0-10', value: 5},
+                    {label: 'Ages 11-20', value: 10},
+                    {label: 'Ages 21-30', value: 17},
+                    {label: 'Ages 31-40', value: 8},
+                    {label: 'Ages 41-50', value: 4},
+                    {label: 'Ages 50+', value: 6}])
             }
         );
     });
@@ -743,6 +775,55 @@ module.exports = function (app, passport) {
 
     });
 
+// Adding Stuff to Database =============================================
+
+    app.post('/add-movie', isEmployee, function (req, res) {
+
+        sqlCon.query(
+            "INSERT INTO `movie` (`TITLE`, `RELEASE_DATE`, `LENGTH`, `EARNINGS`, `AIR_LENGTH`, `POSTER_PATH`) VALUES (?, ?, ?, ?, ?, ?);",
+            [req.body.title, req.body.release, req.body.length, req.body.earning, req.body.air_length, req.body.img_link],
+            function (err, results) {
+                if (err) {
+                    return res.json({err: true, msg: "Error adding to database"});
+                }
+                else
+                    return res.json({err: false});
+            }
+        );
+
+    });
+
+    app.post('/add-showing', isEmployee, function (req, res) {
+
+        sqlCon.query(
+            "INSERT INTO `showing` (`START_TIME`, `PRICE`, `MOVIE_ID`, `AUD_ID`) VALUES (?, ?, ?, ?);",
+            [req.body.start, req.body.price, req.body.movid, req.body.aud],
+            function (err, results) {
+                if (err) {
+                    return res.json({err: true, msg: "Error adding to database"});
+                }
+                else
+                    return res.json({err: false});
+            }
+        );
+
+    });
+
+    app.post('/add-employee', isEmployee, function (req, res) {
+
+        sqlCon.query(
+            "INSERT INTO `employee` (`SSN`, `FNAME`, `LNAME`, `BDATE`, `DNO`, `SEX`, `ADDRESS`, `PHONE_NO`, `SALARY`, `EMAIL`, `PASSWORD`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+            [req.body.ssn, req.body.fname, req.body.lname, req.body.bday, req.body.dept, req.body.sex, req.body.addr, req.body.phone, req.body.salary, req.body.email, req.body.pwd],
+            function (err, results) {
+                if (err) {
+                    return res.json({err: true, msg: "Error adding to database"});
+                }
+                else
+                    return res.json({err: false});
+            }
+        );
+
+    });
 
 // CSS and JS Routing =============================================
 

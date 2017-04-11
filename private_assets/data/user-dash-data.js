@@ -71,4 +71,54 @@ $().ready(function () {
         }
     });
 
+    $('#show-add-emp').click(function () {
+        $('#add-employee').toggle();
+    });
+
+    $('#add-emp-btn').click(function () {
+
+        var m = {
+            ssn: $('#emp-ssn').val(),
+            fname: $('#emp-fname').val(),
+            lname: $('#emp-lname').val(),
+            bday:$('#emp-bday').val(),
+            dept: $('#emp-dept').val(),
+            sex: $('#emp-sex').val(),
+            addr: $('#emp-addr').val(),
+            phone:$('#emp-phone').val(),
+            salary: $('#emp-salary').val(),
+            email: $('#emp-email').val(),
+            pwd: $('#emp-pwd').val()
+        };
+
+        if (!m.ssn|| !m.fname || !m.lname || !m.bday || ! m.email || !m.dept || !m.sex || !m.addr || !m.phone || !m.salary || !m.pwd) {
+            var $err = $('#emp-add-error');
+            $err.html("At least one value was left blank");
+            $err.show();
+
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: 'add-employee',
+                data: m,
+                dataType: 'json',
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (data, textStatus) {
+                    if (data.err) { //error
+
+                        var $err = $('emp-add-error');
+                        $err.html(data.msg);
+                        $err.show();
+
+                    } else {
+                        alert("Success!")
+                    }
+                }
+            });
+        }
+
+    });
+
 });
