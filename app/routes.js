@@ -31,6 +31,13 @@ module.exports = function (app, passport) {
         });
     });
 
+    app.get('/concessions', function (req, res) { //Callback for movies display
+        res.render(VIEW_DIR_PUB + "concessions.html", {
+            user : req.user,
+            adminPanel: false
+        });
+    });
+
     //Request for movie information
     app.post('/movietitles', function (req, res) {
         sqlCon.query("SELECT * FROM movie",
@@ -50,14 +57,32 @@ module.exports = function (app, passport) {
             })
     });
 
+    //Request for concession information
+    app.post('/concessionInfo', function (req, res) {
+        sqlCon.query("SELECT * FROM concessions",
+            function (err, results) {
+                if (err)
+                    throw err;
+                else {
+                    var concessions = [];
+
+                    for(var i=0; i < results.length; i++)
+                        concessions.push({SKU: results[i].SKU, ITEM: results[i].ITEM, PRICE: results[i].PRICE,
+                            BARCODE: results[i].BARCODE, IMG_PATH: results[i].IMG_PATH});
+
+                    return res.json(concessions);
+                }
+            })
+    });
+
     app.post('/bookmovie', function (req, res) {
-        var movie = req.body.movieTitle;
-        if (!movie){
+        var movieID = req.body.movieID;
+        if (!movieID){
             return res.status(400);
         }else {
 
-            sqlCon.query("SELECT * FROM movie WHERE TITLE = '" + movie + "'", //todo: Mark, put your query here.
-                [movie],
+            sqlCon.query("SELECT * FROM movie WHERE ID = '" + movieID + "'",
+                [movieID],
                 function (err, results) {
                     if (err)
                         throw err;
@@ -66,10 +91,62 @@ module.exports = function (app, passport) {
                             return res.json({err:"A movie by that name does not exist"})
                         }
 
-                        console.log(results[0]);
                         return res.json({ID: results[0].ID, TITLE: results[0].TITLE, RELEASE_DATE: results[0].RELEASE_DATE,
                             LENGTH: results[0].LENGTH, EARNINGS: results[0].EARNINGS, AIR_LENGTH:[0].AIR_LENGTH,
-                            POSTER_PATH: results[0].POSTER_PATH});
+                            POSTER_PATH: results[0].POSTER_PATH, SUMMARY: results[0].SUMMARY});
+                    }
+                })
+        }
+
+    });
+
+    app.post('/concessionItem', function (req, res) {
+        var conSKU = req.body.concessionSKU;
+        if (!conSKU){
+            return res.status(400);
+        }else {
+
+            sqlCon.query("SELECT * FROM concessions WHERE SKU = '" + conSKU + "'",
+                [conSKU],
+                function (err, results) {
+                    if (err)
+                        throw err;
+                    else {
+                        if (!results.length) {
+                            return res.json({err:"A concession by that name does not exist"})
+                        }
+
+                        return res.json({SKU: results[0].SKU, ITEM: results[0].ITEM, PRICE: results[0].PRICE,
+                            BARCODE: results[0].BARCODE, IMG_PATH: results[0].IMG_PATH});
+
+                    }
+                })
+        }
+
+    });
+
+    app.post('/movieReview', function (req, res) {
+        var movieID = req.body.movieID;
+        if (!movieID){
+            return res.status(400);
+        }else {
+
+            sqlCon.query("SELECT * FROM review WHERE MOVIE_ID=" + movieID,
+                [movieID],
+                function (err, results) {
+                    if (err)
+                        throw err;
+                    else {
+                        if (!results.length) {
+                            return res.json({err:"A movie by that name does not exist"})
+                        }
+
+                        var reviews = [];
+
+                        for(var i=0; i < results.length; i++)
+                            reviews.push({CONTENT: results[i].CONTENT, RATING: results[i].RATING});
+
+                        return res.json(reviews);
                     }
                 })
         }

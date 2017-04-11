@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+    <title>Buy Concessions</title>
+</head>
+<body onload="getConcessions()">
+
+    <% include ../partials/nav %>
+
+    <% include ../partials/carousel %>
+
+    <script>
+        function getConcessions(){
+            $.post('concessionInfo')
+                .done(function(res){
+
+                    for(var i=0; i < 10; i++){
+                        $('#con' + (i+1)).text(res[i].ITEM);
+                        $('#con' + (i+1) + 'pic').attr("src", res[i].IMG_PATH);
+                        $('#conButton' + (i+1)).data('title', res[i].SKU);
+                    }
+                })
+                .fail(function(){
+                    alert("error");
+                });
+        }
+    </script>
+
+
+
+    <!-- Marketing messaging and featurettes
+================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+        <!-- FIRST ROW --------------------->
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img id="con1pic" src="..." height="1024" width="691"/>
+                    <div class="caption">
+                        <h3 id="con1"></h3>
+                        <a href="#" id="conButton1" class="btn btn-primary" role="button" data-toggle="modal" data-title="test" data-target="#book-con">Book Concession</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img id="con2pic" src="..." height="1024" width="691"/>
+                    <div class="caption">
+                        <h3 id="con2"></h3>
+                        <a href="#" id="conButton2" class="btn btn-primary" role="button" data-toggle="modal" data-title="test" data-target="#book-con">Book Concession</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img id="con3pic" src="..." height="1024" width="691"/>
+                    <div class="caption">
+                        <h3 id="con3"></h3>
+                        <a href="#" id="conButton3" class="btn btn-primary" role="button" data-toggle="modal" data-title="test" data-target="#book-con">Book Concession</a>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.row -->
+
+        <!-- SECOND ROW --------------------->
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img id="con4pic" src="..." height="1024" width="691"/>
+                    <div class="caption">
+                        <h3 id="con4"></h3>
+                        <a href="#" id="conButton4" class="btn btn-primary" role="button" data-toggle="modal" data-title="test" data-target="#book-con">Book Concession</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img id="con5pic" src="..." height="1024" width="691"/>
+                    <div class="caption">
+                        <h3 id="con5"></h3>
+                        <a href="#" id="conButton5" class="btn btn-primary" role="button" data-toggle="modal" data-title="test" data-target="#book-con">Book Concession</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img id="con6pic" src="..." height="1024" width="691"/>
+                    <div class="caption">
+                        <h3 id="con6"></h3>
+                        <a href="#" id="conButton6" class="btn btn-primary" role="button" data-toggle="modal" data-title="test" data-target="#book-con">Book Concession</a>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.row -->
+
+        <!-- SECOND ROW --------------------->
+        <div class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img id="con7pic" src="..." height="1024" width="691"/>
+                    <div class="caption">
+                        <h3 id="con7"></h3>
+                        <a href="#" id="conButton7" class="btn btn-primary" role="button" data-toggle="modal" data-title="test" data-target="#book-con">Book Concession</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img id="con8pic" src="..." height="1024" width="691"/>
+                    <div class="caption">
+                        <h3 id="con8"></h3>
+                        <a href="#" id="conButton8" class="btn btn-primary" role="button" data-toggle="modal" data-title="test" data-target="#book-con">Book Concession</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img id="con9pic" src="..." height="1024" width="691"/>
+                    <div class="caption">
+                        <h3 id="con9"></h3>
+                        <a href="#" id="conButton9" class="btn btn-primary" role="button" data-toggle="modal" data-title="test" data-target="#book-con">Book Concession</a>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.row -->
+
+        <hr class="featurette-divider">
+
+        <!-- FOOTER -->
+        <footer>
+            <p class="pull-right"><a href="#">Back to top</a></p>
+            <p>&copy; 2017 CPSC 471 Group 13 &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+        </footer>
+
+    </div><!-- /.container -->
+
+
+    <% include ../partials/bookconcession %>
+
+    <% include ../partials/movieDetail %>
+
+    <% include ../partials/foot %>
+
+    <script src="../../js/bookconcession.js"></script>
+</body>
+</html>
+
