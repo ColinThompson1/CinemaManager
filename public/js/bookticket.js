@@ -12,6 +12,7 @@ $('#book-ticket').on('show.bs.modal', function (event) {
             $('#movieName').text(res.TITLE);
             $('#movieThumbnail').attr("src", res.POSTER_PATH)
             $('#movieSummary').text(res.SUMMARY);
+            $('#buyTicket').data("id", movieID);
 
             $.post('movieReview', {movieID: res.ID})
                 .done(function(rev){
@@ -28,4 +29,20 @@ $('#book-ticket').on('show.bs.modal', function (event) {
         .fail(function(){
             alert("error");
         });
+});
+
+$('#buyTicket').click(function (){
+   movieID = $(this).data('id')
+
+   $.post('getShowing', {movieID: movieID})
+       .done(function(res){
+           alert("Ticket booked! \n\t Start time: " + res.START_TIME + " \n\t Price: $" + res.PRICE + " \n\t Auditorium: " + res.AUD_ID + " \n\t Seat: " + res.SEAT);
+       })
+       .fail(function(){
+           alert("Unable to book ticket")
+       });
+
+
+
+
 });

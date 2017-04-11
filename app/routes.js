@@ -100,6 +100,52 @@ module.exports = function (app, passport) {
 
     });
 
+    app.post('/getShowing', function(req,res){
+       var movieID = req.body.movieID;
+
+       sqlCon.query("SELECT * FROM showing WHERE MOVIE_ID = " + movieID,
+       [movieID],
+       function (err, results){
+           if (err)
+               throw err;
+           else{
+               if (!results.length){
+                   return res.json({err: "could not book ticket"})
+               }
+
+               sqlCon.query("UPDATE movie SET EARNINGS = EARNINGS +" + results[0].PRICE + " WHERE movie.ID=" + movieID,
+               [movieID],
+               function(err,res){
+               })
+
+
+               var seat = Math.floor((Math.random() * 180) + 1);
+
+               sqlCon.query("INSERT INTO tickets(SEAT_NO,SHOWING_ID,CUSTOMER_ID) VALUES (" + seat+ "," + results[0].ID + ",51)",
+                   [movieID],
+                   function(err,res){
+               })
+
+               return res.json({ID: results[0].ID, START_TIME: results[0].START_TIME, PRICE: results[0].PRICE, AUD_ID: results[0].AUD_ID, SEAT: seat})
+           }
+       })
+    });
+
+    app.post('/getConcession', function(req,res){
+        var conSKU = req.body.concessionSKU;
+
+        if (!conSKU){
+            return res.status(400);
+        }else{
+            sqlCon.query("UPDATE concessions SET QUANTITY = QUANTITY - 1 WHERE SKU = '" + conSKU + "'",
+                [conSKU],
+                function(err,res){
+            })
+
+            return res.json({conSKU: conSKU});
+        }
+    });
+
     app.post('/concessionItem', function (req, res) {
         var conSKU = req.body.concessionSKU;
         if (!conSKU){
@@ -151,11 +197,6 @@ module.exports = function (app, passport) {
                 })
         }
 
-    });
-
-    app.get('/signout', function(req, res){
-        req.logout();
-        res.redirect('/');
     });
 
     app.get('/admin', isEmployee, function (req, res) {
@@ -321,6 +362,26 @@ module.exports = function (app, passport) {
         res.sendFile(MAIN_DIR + "/private_assets/data/user-dash-data.js")
     });
 
+    app.get('/movie-dash-data.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/movie-dash-data.js")
+    });
+
+    app.get('/concessions-data.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/concessions-data.js")
+    });
+
+    app.get('/concession-bar-graph.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/concession-bar-graph.js")
+    });
+
+    app.get('/concession-donut-graph.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/concession-donut-graph.js")
+    });
+
+    app.get('/comments-data.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/comments-data.js")
+    });
+
 
 // Graph Data =============================================
 
@@ -348,7 +409,6 @@ module.exports = function (app, passport) {
 
     app.post('/popularity-graph-data', isEmployee, function (req, res) {
 
-        // return res.json([{label: 'Mona', value: 109023}, {label: 'Finding Dory', value: 125345}, {label: 'Doctor Strange', value: 348982}]);
         sqlCon.query(
             "SELECT M.TITLE, COUNT(T.SHOWING_ID) " +
             "FROM MOVIE M, SHOWING S, TICKETS T " +
@@ -362,10 +422,54 @@ module.exports = function (app, passport) {
                     res.status(404);
 
                 var graphData = [];
-                for (var i = 0; i < results.length; i++) { //Creates a list of string literals
+                for (var i = 0; i < results.length; i++) {
                     var row = results[i];
 
                     graphData.push({label: row.TITLE, value: row['COUNT(T.SHOWING_ID)']})
+                }
+                return res.json(graphData)
+            }
+        );
+    });
+
+    app.post('/concession-bar-data', isEmployee, function (req, res) {
+
+        sqlCon.query(
+            "SELECT ITEM, QUANTITY FROM concessions;",
+            function (err, results) {
+
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+                var graphData = [];
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                    graphData.push({Item: row.ITEM, Quantity: row.QUANTITY})
+                }
+                return res.json(graphData)
+            }
+        );
+    });
+
+    app.post('/concession-donut-data', isEmployee, function (req, res) {
+
+        sqlCon.query(
+            "SELECT ITEM, ORDERED FROM concessions;",
+            function (err, results) {
+
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+                var graphData = [];
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                    graphData.push({label: row.ITEM, value: row.ORDERED})
                 }
                 return res.json(graphData)
             }
@@ -379,7 +483,8 @@ module.exports = function (app, passport) {
         //Fill with user dashboard data
         var data = {
             cust: [], //Customer chart info
-            emp: []
+            emp: [],
+            adv: []
         };
 
         //Query for customer data
@@ -417,9 +522,221 @@ module.exports = function (app, passport) {
                             data.emp.push({ssn: row.SSN, fName: row.FNAME, lName: row.LNAME, bDay: row.BDATE, sex: row.SEX, address: row.ADDRESS, salary: row.SALARY, email: row.EMAIL, phone: row.PHONE_NO, dept: row.DNAME});
                         }
 
-                        return res.json(data);
+                        sqlCon.query(
+                            "SELECT * FROM advertisers;",
+                            [],
+                            function (err, results) {
+                                if (err)
+                                    throw err;
+                                if (!results.length)
+                                    res.status(404);
 
+
+                                for (var i = 0; i < results.length; i++) {
+                                    var row = results[i];
+
+                                    data.adv.push({
+                                        id: row.ID,
+                                        company: row.AD_COMPANY,
+                                        name: row.REP_NAME,
+                                        email: row.REP_EMAIL,
+                                        phone: row.REP_PHONE_NO
+                                    });
+                                }
+
+                                return res.json(data);
+                            });
                     });
+            }
+        );
+
+
+    });
+
+    app.post('/movie-dashboard', isEmployee, function (req, res) {
+
+        //Fill with movie dashboard data
+        var data = {
+            movie: [],
+            ticket: [],
+            showing: [],
+            aud: []
+        };
+
+        //Query for movie data
+        sqlCon.query(
+            "SELECT * FROM movie;",
+            [],
+            function (err, results) {
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                    data.movie.push({id: row.ID,
+                        title: row.TITLE,
+                        release: row.RELEASE_DATE,
+                        length: row.LENGTH,
+                        earnings: row.EARNINGS,
+                        airLength: row.AIR_LENGTH
+                    });
+                }
+
+
+                sqlCon.query(
+                    "SELECT t.ID, m.TITLE, t.SEAT_NO, t.SHOWING_ID, c.FNAME, c.LNAME " +
+                    "from tickets as t, customers as c, movie as m, showing as s " +
+                    "WHERE t.CUSTOMER_ID = c.ID AND t.SHOWING_ID = s.ID AND s.MOVIE_ID = m.ID " +
+                    "ORDER BY t.ID",
+                    [],
+                    function (err, results) {
+                        if (err)
+                            throw err;
+                        if (!results.length)
+                            res.status(404);
+
+                        for (var i = 0; i < results.length; i++) {
+                            var row = results[i];
+
+                            data.ticket.push({
+                                id: row.ID,
+                                movie: row.TITLE,
+                                fName: row.FNAME,
+                                lName: row.LNAME,
+                                seat: row.SEAT_NO
+                            });
+
+                        }
+
+                        sqlCon.query(
+                            "SELECT s.ID, m.TITLE,s.START_TIME, s.PRICE, s.AUD_ID " +
+                            "from movie as m, showing as s "  +
+                            "WHERE s.MOVIE_ID = m.ID " +
+                            "ORDER BY m.TITLE",
+                            [],
+                            function (err, results) {
+                                if (err)
+                                    throw err;
+                                if (!results.length)
+                                    res.status(404);
+
+
+                                for (var i = 0; i < results.length; i++) {
+                                    var row = results[i];
+
+                                    data.showing.push({
+                                        id: row.ID,
+                                        movie: row.TITLE,
+                                        start: row.START_TIME,
+                                        price: row.PRICE,
+                                        aud: row.AUD_ID
+                                    });
+                                }
+
+                                sqlCon.query(
+                                    "SELECT AUD_NO, SEAT_COUNT FROM auditorium",
+                                    [],
+                                    function (err, results) {
+                                        if (err)
+                                            throw err;
+                                        if (!results.length)
+                                            res.status(404);
+
+
+                                        for (var i = 0; i < results.length; i++) {
+                                            var row = results[i];
+
+                                            data.aud.push({
+                                                id: row.AUD_NO,
+                                                seatCount: row.SEAT_COUNT
+                                            });
+                                        }
+
+                                        return res.json(data);
+                                    });
+                            });
+                    });
+            }
+        );
+
+
+    });
+
+    app.post('/concession-dashboard', isEmployee, function (req, res) {
+
+        //Fill with user dashboard data
+        var data = {
+            conc: [] //Customer chart info
+        };
+
+        //Query for customer data
+        sqlCon.query(
+            "SELECT * FROM concessions;",
+            [],
+            function (err, results) {
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                    data.conc.push({
+                        sku: row.SKU,
+                        item: row.ITEM,
+                        price:row.PRICE,
+                        quantity: row.QUANTITY,
+                        ordered: row.ORDERED,
+                        barcode: row.BARCODE
+                    });
+                }
+
+                return res.json(data);
+            }
+        );
+
+
+    });
+
+    app.post('/comments-dashboard', isEmployee, function (req, res) {
+
+        //Fill with user dashboard data
+        var data = {
+            com: [] //Customer chart info
+        };
+
+        //Query for customer data
+        sqlCon.query(
+            "SELECT r.ID, m.TITLE, r.CONTENT, r.RATING " +
+            "FROM movie as m, review as r " +
+            "WHERE r.MOVIE_ID = m.ID " +
+            "ORDER BY r.ID",
+            [],
+            function (err, results) {
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                    data.com.push({
+                        id: row.ID,
+                        movie: row.TITLE,
+                        rating:row.RATING,
+                        comment: row.CONTENT
+                    });
+                }
+
+                return res.json(data);
             }
         );
 
