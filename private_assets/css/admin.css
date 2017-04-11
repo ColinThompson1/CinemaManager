@@ -2,20 +2,17 @@
     margin-top: 0px;
 }
 
+.cell-input-item > td > input {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    line-height: 1 !important;
+}
+.cell-input-item > td {
+    margin: 0 !important;
+    padding: 0 !important;
+}
 
-/*Panel Colour Schemes*/
-
-.panel-test {
-    border-color: #b85f8b;
-}
-.panel-test > .panel-heading {
-    border-color: #a9a4e2;
-    color: white;
-    background-color: #b866a3;
-}
-.panel-test > a {
-    color: #476cb8;
-}
-.panel-test > a:hover {
-    color: #5a8b54;
-}
