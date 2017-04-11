@@ -8,14 +8,14 @@ $('#book-con').on('show.bs.modal', function (event) {
 
     $.post('concessionItem', {concessionSKU: conSKU})
         .done(function(res){
-
             $('#conName').text(res.ITEM);
-            $('#conThumbnail').attr("src", res.IMG_PATH)
 
             $.post('concessionItem', {concessionSKU: res.SKU})
                 .done(function(rev){
-                    $('#conPrice').text("$"+res.PRICE);
+                    $('#conPrice').text("$"+rev.PRICE);
+                    $('#conThumbnail').attr("src", rev.IMG_PATH);
                     $('#conDetails').empty();
+                    $('#buyConcession').data('id', conSKU);
                 })
                 .fail(function(){
                     alert("Could not grab concession info")
@@ -25,4 +25,16 @@ $('#book-con').on('show.bs.modal', function (event) {
         .fail(function(){
             alert("error");
         });
+});
+
+$('#buyConcession').click(function (){
+    conSKU = $(this).data('id')
+
+    $.post('getConcession', {concessionSKU: conSKU})
+        .done(function(res){
+            alert("Concession bought!");
+        })
+        .fail(function(){
+            alert("Are you sure...? You should really go on a diet...")
+        })
 });

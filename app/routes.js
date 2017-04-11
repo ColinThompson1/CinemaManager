@@ -100,6 +100,52 @@ module.exports = function (app, passport) {
 
     });
 
+    app.post('/getShowing', function(req,res){
+       var movieID = req.body.movieID;
+
+       sqlCon.query("SELECT * FROM showing WHERE MOVIE_ID = " + movieID,
+       [movieID],
+       function (err, results){
+           if (err)
+               throw err;
+           else{
+               if (!results.length){
+                   return res.json({err: "could not book ticket"})
+               }
+
+               sqlCon.query("UPDATE movie SET EARNINGS = EARNINGS +" + results[0].PRICE + " WHERE movie.ID=" + movieID,
+               [movieID],
+               function(err,res){
+               })
+
+
+               var seat = Math.floor((Math.random() * 180) + 1);
+
+               sqlCon.query("INSERT INTO tickets(SEAT_NO,SHOWING_ID,CUSTOMER_ID) VALUES (" + seat+ "," + results[0].ID + ",51)",
+                   [movieID],
+                   function(err,res){
+               })
+
+               return res.json({ID: results[0].ID, START_TIME: results[0].START_TIME, PRICE: results[0].PRICE, AUD_ID: results[0].AUD_ID, SEAT: seat})
+           }
+       })
+    });
+
+    app.post('/getConcession', function(req,res){
+        var conSKU = req.body.concessionSKU;
+
+        if (!conSKU){
+            return res.status(400);
+        }else{
+            sqlCon.query("UPDATE concessions SET QUANTITY = QUANTITY - 1 WHERE SKU = '" + conSKU + "'",
+                [conSKU],
+                function(err,res){
+            })
+
+            return res.json({conSKU: conSKU});
+        }
+    });
+
     app.post('/concessionItem', function (req, res) {
         var conSKU = req.body.concessionSKU;
         if (!conSKU){
