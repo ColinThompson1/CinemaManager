@@ -5,7 +5,7 @@
 module.exports = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'admin',
+    'password': 'root',
     'database': 'cinema',
     'port': 3306
 };

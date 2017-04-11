@@ -320,6 +320,22 @@ module.exports = function (app, passport) {
         res.sendFile(MAIN_DIR + "/private_assets/data/movie-dash-data.js")
     });
 
+    app.get('/concessions-data.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/concessions-data.js")
+    });
+
+    app.get('/concession-bar-graph.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/concession-bar-graph.js")
+    });
+
+    app.get('/concession-donut-graph.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/concession-donut-graph.js")
+    });
+
+    app.get('/comments-data.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/comments-data.js")
+    });
+
 
 // Graph Data =============================================
 
@@ -347,7 +363,6 @@ module.exports = function (app, passport) {
 
     app.post('/popularity-graph-data', isEmployee, function (req, res) {
 
-        // return res.json([{label: 'Mona', value: 109023}, {label: 'Finding Dory', value: 125345}, {label: 'Doctor Strange', value: 348982}]);
         sqlCon.query(
             "SELECT M.TITLE, COUNT(T.SHOWING_ID) " +
             "FROM MOVIE M, SHOWING S, TICKETS T " +
@@ -361,10 +376,54 @@ module.exports = function (app, passport) {
                     res.status(404);
 
                 var graphData = [];
-                for (var i = 0; i < results.length; i++) { //Creates a list of string literals
+                for (var i = 0; i < results.length; i++) {
                     var row = results[i];
 
                     graphData.push({label: row.TITLE, value: row['COUNT(T.SHOWING_ID)']})
+                }
+                return res.json(graphData)
+            }
+        );
+    });
+
+    app.post('/concession-bar-data', isEmployee, function (req, res) {
+
+        sqlCon.query(
+            "SELECT ITEM, QUANTITY FROM concessions;",
+            function (err, results) {
+
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+                var graphData = [];
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                    graphData.push({Item: row.ITEM, Quantity: row.QUANTITY})
+                }
+                return res.json(graphData)
+            }
+        );
+    });
+
+    app.post('/concession-donut-data', isEmployee, function (req, res) {
+
+        sqlCon.query(
+            "SELECT ITEM, ORDERED FROM concessions;",
+            function (err, results) {
+
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+                var graphData = [];
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                    graphData.push({label: row.ITEM, value: row.ORDERED})
                 }
                 return res.json(graphData)
             }
@@ -555,6 +614,83 @@ module.exports = function (app, passport) {
                                     });
                             });
                     });
+            }
+        );
+
+
+    });
+
+    app.post('/concession-dashboard', isEmployee, function (req, res) {
+
+        //Fill with user dashboard data
+        var data = {
+            conc: [] //Customer chart info
+        };
+
+        //Query for customer data
+        sqlCon.query(
+            "SELECT * FROM concessions;",
+            [],
+            function (err, results) {
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                    data.conc.push({
+                        sku: row.SKU,
+                        item: row.ITEM,
+                        price:row.PRICE,
+                        quantity: row.QUANTITY,
+                        ordered: row.ORDERED,
+                        barcode: row.BARCODE
+                    });
+                }
+
+                return res.json(data);
+            }
+        );
+
+
+    });
+
+    app.post('/comments-dashboard', isEmployee, function (req, res) {
+
+        //Fill with user dashboard data
+        var data = {
+            com: [] //Customer chart info
+        };
+
+        //Query for customer data
+        sqlCon.query(
+            "SELECT r.ID, m.TITLE, r.CONTENT, r.RATING " +
+            "FROM movie as m, review as r " +
+            "WHERE r.MOVIE_ID = m.ID " +
+            "ORDER BY r.ID",
+            [],
+            function (err, results) {
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                    data.com.push({
+                        id: row.ID,
+                        movie: row.TITLE,
+                        rating:row.RATING,
+                        comment: row.CONTENT
+                    });
+                }
+
+                return res.json(data);
             }
         );
 
