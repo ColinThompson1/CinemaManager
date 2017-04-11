@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version 5.7.17-log)
-# Date: 2017-04-08 20:40:10
+# Date: 2017-04-10 17:33:04
 # Generator: MySQL-Front 6.0  (Build 1.117)
 
 
@@ -25,6 +25,25 @@ CREATE TABLE `advertisers` (
 INSERT INTO `advertisers` VALUES (1,'PepsiCo','James','James@PepsiCo.com',2147483647),(2,'Nike','Jack','jack@nike.com',1234567891),(3,'Adidas','Jill','jill@adidas.com',1234567892),(4,'Reebok','Moe','moe@reebok.com',1234567893),(5,'Wal-Mart','Matthew','Matthew@Wal-Mart.com',2147483647),(6,'ExxonMobil','Tod','Tod@ExxonMobil.com',2147483647),(7,'Chevron','Esta','Esta@Chevron.com',1029064122),(8,'BerkshireHathaway','Dominique','Dominique@BerkshireHathaway.com',2147483647),(9,'Apple','Daniella','Daniella@Apple.com',2147483647),(10,'Phillips66','Julianna','Julianna@Phillips66.com',2147483647),(11,'GeneralMotors','Federico','Federico@GeneralMotors.com',1262013217),(12,'FordMotor','Norine','Norine@FordMotor.com',2147483647),(13,'GeneralElectric','Danuta','Danuta@GeneralElectric.com',2147483647),(14,'ValeroEnergy','Jamar','Jamar@ValeroEnergy.com',2147483647),(15,'CVSCaremark','Charis','Charis@CVSCaremark.com',1702419412),(16,'FannieMae','Roxanne','Roxanne@FannieMae.com',2147483647),(17,'UnitedHealthGroup','Shannon','Shannon@UnitedHealthGroup.com',2147483647),(18,'McKesson','Esteban','Esteban@McKesson.com',1506649647),(19,'VerizonCommunications','Lindsay','Lindsay@VerizonCommunications.com',2147483647),(20,'Hewlett-Packard','Krystin','Krystin@Hewlett-Packard.com',2147483647),(21,'J.P.MorganChase','Huong','Huong@J.P.MorganChaseCo.com',2128613958),(22,'CostcoWholesale','Rea','Rea@CostcoWholesale.com',1755172119),(23,'ExpressScriptsHolding','Nohemi','Nohemi@ExpressScriptsHolding.com',1722502533),(24,'BankofAmerica','Scotty','Scotty@BankofAmerica.com',2147483647),(25,'CardinalHealth','Lola','Lola@CardinalHealth.com',2147483647),(26,'IBM','Gerardo','Gerardo@ibm.com',2147483647);
 
 #
+# Structure for table "auditorium"
+#
+
+DROP TABLE IF EXISTS `auditorium`;
+CREATE TABLE `auditorium` (
+  `AUD_NO` int(11) NOT NULL AUTO_INCREMENT,
+  `SEAT_COUNT` int(11) NOT NULL,
+  `SHOWING_ID` int(11) DEFAULT NULL,
+  PRIMARY KEY (`AUD_NO`),
+  KEY `SHOWING_ID` (`SHOWING_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+
+#
+# Data for table "auditorium"
+#
+
+INSERT INTO `auditorium` VALUES (16,250,1),(17,257,2),(18,300,3),(19,240,4),(20,233,5),(21,301,6),(22,180,7),(23,260,8),(24,270,10);
+
+#
 # Structure for table "concessions"
 #
 
@@ -36,6 +55,7 @@ CREATE TABLE `concessions` (
   `BARCODE` varchar(30) DEFAULT NULL,
   `QUANTITY` int(11) NOT NULL DEFAULT '0',
   `ORDERED` int(11) NOT NULL DEFAULT '0',
+  `IMG_PATH` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`SKU`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -43,7 +63,7 @@ CREATE TABLE `concessions` (
 # Data for table "concessions"
 #
 
-INSERT INTO `concessions` VALUES ('CHO-KIT-S','KitKat Small',3.49,'38957858',1046,1427),('CHP-LY-R','Lays Reg Small',2.99,'88079893',915,1239),('CNDY-SKIT-S','Skittles Small',2.99,'68721821',1029,1224),('HOT-CH','Hotdog Cheese',7.99,'11629962',619,681),('HOT-CHCL','Hotdog Chili Cheese',11.99,'11629964',860,967),('HOT-CL','Hotdog Chili',8.99,'11629963',1237,734),('HOT-R','Hotdog Reg',4.99,'11629961',1562,525),('PEPS-B-591-R','Pepsi Bottle Small',4.25,'97182108',1324,542),('PEPS-B-735-R','Pepsi BottleMed',5.00,'97182109',1023,123),('PEPS-C-375-R','Pepsi Can',2.00,'97182110',2000,414),('POPC-L','Popcorn Lrg',7.99,'54689589',751,954),('POPC-M','Popcorn Med',6.99,'54689587',634,1324),('POPC-S','Popcorn Small',5.99,'54689586',1032,964);
+INSERT INTO `concessions` VALUES ('CHO-KIT-S','KitKat Small',3.49,'38957858',1046,1427,'../../concession_images/kitkat.jpg'),('CHP-LY-R','Lays Reg Small',2.99,'88079893',915,1239,'../../concession_images/lays.jpg'),('CNDY-SKIT-S','Skittles Small',2.99,'68721821',1029,1224,'../../concession_images/skittles.jpg'),('HOT-CH','Hotdog Cheese',7.99,'11629962',619,681,'../../concession_images/hotdog-cheese.jpg'),('HOT-CHCL','Hotdog Chili Cheese',11.99,'11629964',860,967,'../../concession_images/hotdog-chili-cheese.jpg'),('HOT-CL','Hotdog Chili',8.99,'11629963',1237,734,'../../concession_images/hotdog-chili.jpg'),('HOT-R','Hotdog Reg',4.99,'11629961',1562,525,'../../concession_images/hot-dog.jpg'),('PEPS-B-735-R','Pepsi BottleMed',5.00,'97182109',1023,123,'../../concession_images/pepsi_l.jpg'),('POPC-L','Popcorn Lrg',7.99,'54689589',751,954,'../../concession_images/popcorn_l.jpg');
 
 #
 # Structure for table "customers"
@@ -132,6 +152,7 @@ CREATE TABLE `movie` (
   `EARNINGS` double DEFAULT NULL,
   `AIR_LENGTH` int(11) DEFAULT NULL,
   `POSTER_PATH` varchar(255) DEFAULT NULL,
+  `SUMMARY` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
@@ -139,7 +160,7 @@ CREATE TABLE `movie` (
 # Data for table "movie"
 #
 
-INSERT INTO `movie` VALUES (1,'Beauty and the Beast','2017-02-23','02:19:00',61843,60,'../../movie_images/Beauty_and_the_Beast_2017.jpg'),(2,'Doctor Strange','2016-10-13','01:55:00',197205,86,'../../movie_images/Doctor_Strange.jpg'),(3,'Finding Dory','2016-06-17','01:40:00',523498,217,'../../movie_images/Finding_Dory.jpg'),(4,'Ghost in the Shell','2017-03-31','02:00:00',6,5000,'../../movie_images/Ghost_in_the_Shell.jpg'),(5,'Hell or High Water','2016-08-19','01:43:00',18612,190,'../../movie_images/Hell_or_High_Water.jpg'),(6,'Manchester by the Sea','2016-11-18','02:17:00',54612,126,'../../movie_images/Manchester_By_The_Sea.jpg'),(7,'Moana','2016-11-23','01:53:00',1000000,136,'../../movie_images/Moana.jpg'),(8,'Star Wars: Rogue One','2016-12-16','02:13:00',2000000,100,'../../movie_images/Rogue_One_A_Star_Wars_Story.jpg'),(9,'Spider-Man: Homecoming','2017-06-17','00:00:00',0,0,'../../movie_images/Spiderman_Homecoming.jpg'),(10,'The Jungle Book','2016-04-15','01:51:00',500000,269,'../../movie_images/The_Jungle_Book.jpg'),(11,'The Circle','2017-04-28','00:00:00',0,0,'../../movie_images/The_Circle.jpg'),(12,'Baywatch','2017-05-26','00:00:00',0,0,'../../movie_images/Baywatch.jpg');
+INSERT INTO `movie` VALUES (1,'Beauty and the Beast','2017-02-23','02:19:00',61843,60,'../../movie_images/Beauty_and_the_Beast_2017.jpg','An adaptation of the fairy tale about a monstrous-looking prince and a young woman who fall in love.'),(2,'Doctor Strange','2016-10-13','01:55:00',197205,86,'../../movie_images/Doctor_Strange.jpg','While on a journey of physical and spiritual healing, a brilliant neurosurgeon is drawn into the world of the mystic arts.'),(3,'Finding Dory','2016-06-17','01:40:00',523498,217,'../../movie_images/Finding_Dory.jpg','The friendly but forgetful blue tang fish, Dory, begins a search for her long-lost parents, and everyone learns a few things about the real meaning of family along the way.'),(4,'Ghost in the Shell','2017-03-31','02:00:00',6,5000,'../../movie_images/Ghost_in_the_Shell.jpg','In the near future, Major is the first of her kind: A human saved from a terrible crash, who is cyber-enhanced to be a perfect soldier devoted to stopping the world\'s most dangerous criminals.'),(5,'Hell or High Water','2016-08-19','01:43:00',18612,190,'../../movie_images/Hell_or_High_Water.jpg','A divorced father and his ex-con older brother resort to a desperate scheme in order to save their family\'s ranch in West Texas.'),(6,'Manchester by the Sea','2016-11-18','02:17:00',54612,126,'../../movie_images/Manchester_By_The_Sea.jpg','A depressed uncle is asked to take care of his teenage nephew after the boy\'s father dies.'),(7,'Moana','2016-11-23','01:53:00',1000000,136,'../../movie_images/Moana.jpg','In Ancient Polynesia, when a terrible curse incurred by the Demigod Maui reaches an impetuous Chieftain\'s daughter\'s island, she answers the Ocean\'s call to seek out the Demigod to set things right.'),(8,'Star Wars: Rogue One','2016-12-16','02:13:00',2000000,100,'../../movie_images/Rogue_One_A_Star_Wars_Story.jpg','The Rebel Alliance makes a risky move to steal the plans for the Death Star, setting up the epic saga to follow.'),(9,'Spider-Man: Homecoming','2017-06-17','00:00:00',0,0,'../../movie_images/Spiderman_Homecoming.jpg','Following the events of Captain America: Civil War (2016), Peter Parker attempts to balance his life in high school with his career as the web-slinging superhero Spider-Man.'),(10,'The Jungle Book','2016-04-15','01:51:00',500000,269,'../../movie_images/The_Jungle_Book.jpg','After a threat from the tiger Shere Khan forces him to flee the jungle, a man-cub named Mowgli embarks on a journey of self discovery with the help of panther, Bagheera, and free spirited bear, Baloo.'),(11,'The Circle','2017-04-28','00:00:00',0,0,'../../movie_images/The_Circle.jpg','A woman lands a dream job at a powerful tech company called the Circle, only to uncover a nefarious agenda that will affect the lives of her friends, family and that of humanity.'),(12,'Baywatch','2017-05-26','00:00:00',0,0,'../../movie_images/Baywatch.jpg','Devoted lifeguard Mitch Buchanan butts heads with a brash new recruit. Together, they uncover a local criminal plot that threatens the future of the Bay.');
 
 #
 # Structure for table "review"
@@ -172,36 +193,19 @@ CREATE TABLE `showing` (
   `START_TIME` time DEFAULT NULL,
   `PRICE` double DEFAULT NULL,
   `MOVIE_ID` int(11) DEFAULT NULL,
+  `AUD_ID` int(11) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `MOVIE_ID` (`MOVIE_ID`),
-  CONSTRAINT `showing_ibfk_1` FOREIGN KEY (`MOVIE_ID`) REFERENCES `movie` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `AUD_ID` (`AUD_ID`),
+  CONSTRAINT `showing_ibfk_1` FOREIGN KEY (`MOVIE_ID`) REFERENCES `movie` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `showing_ibfk_2` FOREIGN KEY (`AUD_ID`) REFERENCES `auditorium` (`AUD_NO`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "showing"
 #
 
-INSERT INTO `showing` VALUES (1,'15:00:00',12,1),(2,'12:15:00',11,2),(3,'13:00:00',15,3),(4,'12:30:00',10,4),(5,'15:15:00',8,5),(6,'14:00:00',6,6),(7,'15:30:00',8,7),(8,'19:30:00',13,8),(10,'19:00:00',5,10);
-
-#
-# Structure for table "auditorium"
-#
-
-DROP TABLE IF EXISTS `auditorium`;
-CREATE TABLE `auditorium` (
-  `AUD_NO` int(11) NOT NULL AUTO_INCREMENT,
-  `SEAT_COUNT` int(11) NOT NULL,
-  `SHOWING_ID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`AUD_NO`),
-  KEY `SHOWING_ID` (`SHOWING_ID`),
-  CONSTRAINT `auditorium_ibfk_1` FOREIGN KEY (`SHOWING_ID`) REFERENCES `showing` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
-
-#
-# Data for table "auditorium"
-#
-
-INSERT INTO `auditorium` VALUES (16,250,1),(17,257,2),(18,300,3),(19,240,4),(20,233,5),(21,301,6),(22,180,7),(23,260,8),(24,270,10);
+INSERT INTO `showing` VALUES (1,'15:00:00',12,1,16),(2,'12:15:00',11,2,17),(3,'13:00:00',15,3,18),(4,'12:30:00',10,4,19),(5,'15:15:00',8,5,20),(6,'14:00:00',6,6,21),(7,'15:30:00',8,7,22),(8,'19:30:00',13,8,23),(10,'19:00:00',5,10,24);
 
 #
 # Structure for table "tickets"
