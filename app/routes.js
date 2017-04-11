@@ -137,10 +137,10 @@ module.exports = function (app, passport) {
         if (!conSKU){
             return res.status(400);
         }else{
-            sqlCon.query("UPDATE concessions SET QUANTITY = QUANTITY - 1 WHERE SKU = '" + conSKU + "'",
+            sqlCon.query("UPDATE concessions SET QUANTITY = QUANTITY - 1, ORDERED = ORDERED + 1 WHERE SKU = ?",
                 [conSKU],
                 function(err,res){
-            })
+            });
 
             return res.json({conSKU: conSKU});
         }
