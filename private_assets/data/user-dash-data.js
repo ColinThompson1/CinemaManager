@@ -44,11 +44,28 @@ $().ready(function () {
                 )
             }
 
+            for (var i = 0; i < data.adv.length; i++) {
+                var u = data.adv[i];
+                $('#adv-lookup-body').append(
+                    "<tr>" +
+                    "<td>" + u.id + "</td>" +
+                    "<td>" + u.company + "</td>" +
+                    "<td>" + u.name + "</td>" +
+                    "<td>" + u.email + "</td>" +
+                    "<td>" + u.phone + "</td>" +
+                    "</tr>"
+                )
+            }
+
             $('#customer-lookup').DataTable({
                 responsive: true
             });
 
             $('#employee-lookup').DataTable({
+                responsive: true
+            });
+
+            $('#advertiser-lookup').DataTable({
                 responsive: true
             });
         }

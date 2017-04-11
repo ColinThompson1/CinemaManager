@@ -244,6 +244,10 @@ module.exports = function (app, passport) {
         res.sendFile(MAIN_DIR + "/private_assets/data/user-dash-data.js")
     });
 
+    app.get('/movie-dash-data.js', isEmployee, function (req, res) {
+        res.sendFile(MAIN_DIR + "/private_assets/data/movie-dash-data.js")
+    });
+
 
 // Graph Data =============================================
 
@@ -302,7 +306,8 @@ module.exports = function (app, passport) {
         //Fill with user dashboard data
         var data = {
             cust: [], //Customer chart info
-            emp: []
+            emp: [],
+            adv: []
         };
 
         //Query for customer data
@@ -340,8 +345,143 @@ module.exports = function (app, passport) {
                             data.emp.push({ssn: row.SSN, fName: row.FNAME, lName: row.LNAME, bDay: row.BDATE, sex: row.SEX, address: row.ADDRESS, salary: row.SALARY, email: row.EMAIL, phone: row.PHONE_NO, dept: row.DNAME});
                         }
 
-                        return res.json(data);
+                        sqlCon.query(
+                            "SELECT * FROM advertisers;",
+                            [],
+                            function (err, results) {
+                                if (err)
+                                    throw err;
+                                if (!results.length)
+                                    res.status(404);
 
+
+                                for (var i = 0; i < results.length; i++) {
+                                    var row = results[i];
+
+                                    data.adv.push({
+                                        id: row.ID,
+                                        company: row.AD_COMPANY,
+                                        name: row.REP_NAME,
+                                        email: row.REP_EMAIL,
+                                        phone: row.REP_PHONE_NO
+                                    });
+                                }
+
+                                return res.json(data);
+                            });
+                    });
+            }
+        );
+
+
+    });
+
+    app.post('/movie-dashboard', isEmployee, function (req, res) {
+
+        //Fill with movie dashboard data
+        var data = {
+            movie: [],
+            ticket: [],
+            showing: [],
+            aud: []
+        };
+
+        //Query for movie data
+        sqlCon.query(
+            "SELECT * FROM movie;",
+            [],
+            function (err, results) {
+                if (err)
+                    throw err;
+                if (!results.length)
+                    res.status(404);
+
+
+                for (var i = 0; i < results.length; i++) {
+                    var row = results[i];
+
+                    data.movie.push({id: row.ID,
+                        title: row.TITLE,
+                        release: row.RELEASE_DATE,
+                        length: row.LENGTH,
+                        earnings: row.EARNINGS,
+                        airLength: row.AIR_LENGTH
+                    });
+                }
+
+
+                sqlCon.query(
+                    "SELECT t.ID, m.TITLE, t.SEAT_NO, t.SHOWING_ID, c.FNAME, c.LNAME " +
+                    "from tickets as t, customers as c, movie as m, showing as s " +
+                    "WHERE t.CUSTOMER_ID = c.ID AND t.SHOWING_ID = s.ID AND s.MOVIE_ID = m.ID " +
+                    "ORDER BY t.ID",
+                    [],
+                    function (err, results) {
+                        if (err)
+                            throw err;
+                        if (!results.length)
+                            res.status(404);
+
+                        for (var i = 0; i < results.length; i++) {
+                            var row = results[i];
+
+                            data.ticket.push({
+                                id: row.ID,
+                                movie: row.TITLE,
+                                fName: row.FNAME,
+                                lName: row.LNAME,
+                                seat: row.SEAT_NO
+                            });
+
+                        }
+
+                        sqlCon.query(
+                            "SELECT s.ID, m.TITLE,s.START_TIME, s.PRICE, s.AUD_ID " +
+                            "from movie as m, showing as s "  +
+                            "WHERE s.MOVIE_ID = m.ID " +
+                            "ORDER BY m.TITLE",
+                            [],
+                            function (err, results) {
+                                if (err)
+                                    throw err;
+                                if (!results.length)
+                                    res.status(404);
+
+
+                                for (var i = 0; i < results.length; i++) {
+                                    var row = results[i];
+
+                                    data.showing.push({
+                                        id: row.ID,
+                                        movie: row.TITLE,
+                                        start: row.START_TIME,
+                                        price: row.PRICE,
+                                        aud: row.AUD_ID
+                                    });
+                                }
+
+                                sqlCon.query(
+                                    "SELECT AUD_NO, SEAT_COUNT FROM auditorium",
+                                    [],
+                                    function (err, results) {
+                                        if (err)
+                                            throw err;
+                                        if (!results.length)
+                                            res.status(404);
+
+
+                                        for (var i = 0; i < results.length; i++) {
+                                            var row = results[i];
+
+                                            data.aud.push({
+                                                id: row.AUD_NO,
+                                                seatCount: row.SEAT_COUNT
+                                            });
+                                        }
+
+                                        return res.json(data);
+                                    });
+                            });
                     });
             }
         );

@@ -8,6 +8,8 @@
 
     <% include ../partials/admin_resources_head %>
 
+    <% include ../partials/tables-head %>
+
 </head>
 <body>
 
@@ -28,10 +30,110 @@
         </div>
         <!-- /.row -->
 
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-info">
+                    <div class="panel-heading"><h3 style="margin: 2px">Ticket Holders</h3></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="ticket-lookup">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Movie</th>
+                                    <th>Cust. First Name</th>
+                                    <th>Cust. Last Name</th>
+                                    <th>Seat</th>
+                                </thead>
+                                <tbody id="ticket-lookup-body">
+                                    <!--Add rows in js-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4">
+
+
+            </div>
+
+        </div>
+        <div class="row">
+            <hr>
+            <div class="col-md-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading"><h3 style="margin: 2px">Movies</h3></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="movie-lookup">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Release</th>
+                                    <th>Length</th>
+                                    <th>Earnings</th>
+                                    <th>Air Length</th>
+                                </thead>
+                                <tbody id="movie-lookup-body">
+                                <!--Add rows in js-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr>
+            <div class="col-md-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading"><h3 style="margin: 2px">Auditorium</h3></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="aud-lookup">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Number of Seats</th>
+                                </thead>
+                                <tbody id="aud-lookup-body">
+                                    <!--Add rows in js-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <hr>
+            <div class="col-md-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading"><h3 style="margin: 2px">Showing</h3></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="showing-lookup">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>Movie</th>
+                                    <th>Start Time</th>
+                                    <th>Price</th>
+                                    <th>Aud #</th>
+                                </thead>
+                                <tbody id="showing-lookup-body">
+                                <!--Add rows in js-->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
-
-
-
 
 
 
@@ -43,6 +145,10 @@
 <% include ../../../public/views/partials/foot %>
 
 <% include ../partials/admin_resources_foot %>
+
+<% include ../partials/tables-foot %>
+
+<script src="movie-dash-data.js"></script>
 
 </body>
 </html>
